@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../action/userAction";
+// import { useDispatch, useSelector } from "react-redux";
+// import { userActions } from "../action/userAction";
 
 import "../style/login.style.css";
 
 const Login = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.user);
+  // const { user } = useSelector((state) => state.user);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const error = useSelector((state) => state.user.error);
+  // const error = useSelector((state) => state.user.error);
+  let error=false
+  const user ={}
 
   const loginWithEmail = (event) => {
     event.preventDefault();

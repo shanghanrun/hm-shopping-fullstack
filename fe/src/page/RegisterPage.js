@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { userActions } from "../action/userAction";
+// import { userActions } from "../action/userAction";
 import "../style/register.style.css";
 const RegisterPage = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
     name: "",
@@ -16,7 +16,8 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const [passwordError, setPasswordError] = useState("");
   const [policyError, setPolicyError] = useState(false);
-  const error = useSelector((state) => state.user.error);
+  // const error = useSelector((state) => state.user.error);
+  let error = false
 
   const register = (event) => {
     event.preventDefault();
@@ -29,6 +30,8 @@ const RegisterPage = () => {
   const handleChange = (event) => {
     event.preventDefault();
     // 값을 읽어서 FormData에 넣어주기
+    const {id, value} = event.target
+    console.log(id, value)
   };
 
   return (

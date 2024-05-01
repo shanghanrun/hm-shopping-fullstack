@@ -9,13 +9,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../action/userAction";
 
 const Navbar = ({ user }) => {
-  const dispatch = useDispatch();
-  const { cartItemCount } = useSelector((state) => state.cart);
-  const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
+  // const dispatch = useDispatch();
+  // const { cartItemCount } = useSelector((state) => state.cart);
+  let cartItemCount =0
+  // const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
+  let isMobile = false
   const [showSearchBox, setShowSearchBox] = useState(false);
   const menuList = [
     "여성",
@@ -38,7 +40,7 @@ const Navbar = ({ user }) => {
     }
   };
   const logout = () => {
-    dispatch(userActions.logout());
+    // dispatch(userActions.logout());
   };
   return (
     <div>

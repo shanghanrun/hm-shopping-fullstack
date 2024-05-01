@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import SearchBox from "../component/SearchBox";
-import { useDispatch, useSelector } from "react-redux";
-import { orderActions } from "../action/orderAction";
+// import { useDispatch, useSelector } from "react-redux";
+// import { orderActions } from "../action/orderAction";
 import OrderDetailDialog from "../component/OrderDetailDialog";
 import OrderTable from "../component/OrderTable";
 import * as types from "../constants/order.constants";
 import ReactPaginate from "react-paginate";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { commonUiActions } from "../action/commonUiAction";
+// import { commonUiActions } from "../action/commonUiAction";
 
 const AdminOrderPage = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useSearchParams();
-  const dispatch = useDispatch();
-  const orderList = useSelector((state) => state.order.orderList);
+  // const dispatch = useDispatch();
+  // const orderList = useSelector((state) => state.order.orderList);
+  const orderList=[]
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
     ordernum: query.get("ordernum") || "",
   });
   const [open, setOpen] = useState(false);
-  const totalPageNum = useSelector((state) => state.order.totalPageNum);
+  // const totalPageNum = useSelector((state) => state.order.totalPageNum);
+  const totalPageNum=2
   const tableHeader = [
     "#",
     "Order#",
@@ -33,7 +35,7 @@ const AdminOrderPage = () => {
   ];
 
   useEffect(() => {
-    dispatch(orderActions.getOrderList({ ...searchQuery }));
+    // dispatch(orderActions.getOrderList({ ...searchQuery }));
   }, [query]);
 
   useEffect(() => {
@@ -48,7 +50,7 @@ const AdminOrderPage = () => {
 
   const openEditForm = (order) => {
     setOpen(true);
-    dispatch({ type: types.SET_SELECTED_ORDER, payload: order });
+    // dispatch({ type: types.SET_SELECTED_ORDER, payload: order });
   };
 
   const handlePageClick = ({ selected }) => {
