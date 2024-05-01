@@ -2,7 +2,7 @@ const Product = require('../model/Product')
 
 const productController={}
 
-productController.createUser = async(req, res)=>{
+productController.createProduct = async(req, res)=>{
 	try{
 		const {name,image,category,description,stock,status,isDeleted} = req.body;
 

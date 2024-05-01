@@ -28,3 +28,6 @@ orderController.getOrder=async(req, res)=>{
 		res.status(400).json({status:'fail', message:e.message})
 	}
 }
+
+
+module.exports = orderController;

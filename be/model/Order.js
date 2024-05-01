@@ -7,8 +7,8 @@ const orderSchema = Schema({
 	shipTo:{type:String, required:true},
 	contact:{type:String, required:true},
 	totalPrice:{type:Number, default:0},
-	userId:{type:Schema.types.ObjectId, ref:User},//혹은 mongoose.ObjectId
-	status:{type:String, default:'배송준비중'}
+	userId:{type:mongoose.ObjectId, ref:User},
+	status:{type:String, default:'배송준비중'},
 	items:[{
 		productId:{type:mongoose.ObjectId, ref:Product},
 		size:{type:String, required:true},
