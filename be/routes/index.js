@@ -6,7 +6,6 @@ const productRouter = require('./productRouter')
 const cartRouter = require('./cartRouter')
 const orderRouter = require('./orderRouter')
 
-// router.user('/', autoRouter)
 router.use('/user', userRouter)
 router.use('/product', productRouter)
 router.use('/cart', cartRouter)

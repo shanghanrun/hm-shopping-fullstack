@@ -1,3 +1,5 @@
+const User = require('../model/User')
+
 const authController ={}
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
@@ -21,6 +23,17 @@ authController.authenticate =(req, res, next)=>{
 		next()
 	} catch(e){
 		return res.status(400).json({status:'fail', message:e.message})
+	}
+}
+
+authController.checkAdminPermission =async(req,res,next)=>{
+	try{   // authController.authenticate에서 넘어온 userId로 level이 admin인지 확인
+		const userId = req.userId
+		const user = await User.findById(userId)
+		if(user.level !== 'admin') throw new Error('no permission')
+		next()
+	}catch(e){
+		res.status(400).json({status:'fail', message:e.message})
 	}
 }
 module.exports = authController;
