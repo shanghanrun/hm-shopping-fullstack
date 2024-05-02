@@ -2,7 +2,7 @@ const mongoose =require('mongoose')
 const Schema = mongoose.Schema
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
-const secretKey = process.env.JWT_SECRET
+const secretKey = process.env.JWT_SECRET_KEY
 
 const userSchema = Schema({
 	email:{type:String, required:true, unique:true},
