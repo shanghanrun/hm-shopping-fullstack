@@ -4,14 +4,14 @@ const productController={}
 
 productController.createProduct = async(req, res)=>{
 	try{
-		const {name,image,category,description,stock,status,isDeleted} = req.body;
+		const {sku,name,image,category,description,stock,status,isDeleted} = req.body;
 
-		const newProduct = new Product({name,image,category,description,stock,status,isDeleted})
+		const newProduct = new Product({sku, name,image,category,description,stock,status,isDeleted})
 		await newProduct.save()
 		
 		return res.status(200).json({status:'ok', data:newProduct})
 	}catch(e){
-		return res.status(400).json({status:'fail', e})
+		return res.status(400).json({status:'fail', message:e.message})
 	}
 }
 
