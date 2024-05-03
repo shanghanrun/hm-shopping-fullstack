@@ -167,16 +167,16 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                     <option value="" disabled selected hidden>
                       Please Choose...
                     </option>
-                    {SIZE.map((item, index) => (
+                    {SIZE.map((size, index) => (
                       <option
                         inValid={true}
-                        value={item.toLowerCase()}
+                        value={size.toLowerCase()}
                         disabled={stock.some(
-                          (size) => size[0] === item.toLowerCase()
+                          (item) => item[0] === size.toLowerCase()
                         )}
                         key={index}
                       >
-                        {item}
+                        {size}
                       </option>
                     ))}
                   </Form.Select>
