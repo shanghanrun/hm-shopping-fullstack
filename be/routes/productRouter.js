@@ -1,11 +1,12 @@
 const express = require('express')
-const router = express.Router()
+const productRouter = express.Router()
 const productController =require('../controller/productController')
+const authController =require('../controller/authController')
 
-router.post('/', productController.createProduct)
-router.get('/', productController.getAllProducts)
-router.get('/:id', productController.getProductById)
-router.delete('/:id', productController.deleteProduct)
-router.put('/:id', productController.updateProduct)
+productRouter.post('/', authController.authenticate, authController.checkAdminPermission, productController.createProduct)
+productRouter.get('/', productController.getAllProducts)
+productRouter.get('/:id', productController.getProductById)
+productRouter.delete('/:id', productController.deleteProduct)
+productRouter.put('/:id', productController.updateProduct)
 
-module.exports =router
+module.exports =productRouter
