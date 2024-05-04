@@ -18,7 +18,7 @@ userController.createUser = async(req, res)=>{
 		
 		return res.status(200).json({status:'success', data:newUser})
 	}catch(e){
-		return res.status(400).json({status:'fail', message:e.message})
+		return res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -43,7 +43,7 @@ userController.loginWithEmail= async(req, res)=>{
 			}
 		}
 	}catch(e){
-		return res.status(409).json({status:'fail', message:e.message})
+		return res.status(409).json({status:'fail', error:e.message})
 	}
 }
 
@@ -56,7 +56,7 @@ userController.getUser=async(req, res)=>{
 		}
 		res.status(200).json({status:'success', user })
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 

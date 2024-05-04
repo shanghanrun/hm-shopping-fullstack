@@ -17,12 +17,14 @@ authController.authenticate =(req, res, next)=>{
 			if(err){
 				throw new Error('invalid token')
 			}
+			//jwt.verify()를 할 때 payload 객체 {_id, 기타} 를 갖고 실행한다.
+			//그래서 검증이 잘되면 payload._id에 id값을 넣어준다.
 			// return res.status(200).json({status:'ok', userId:payload._id})
 			req.userId = payload._id
 		})
 		next()
 	} catch(e){
-		return res.status(400).json({status:'fail', message:e.message})
+		return res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -33,7 +35,7 @@ authController.checkAdminPermission =async(req,res,next)=>{
 		if(user.level !== 'admin') throw new Error('no permission')
 		next()
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 module.exports = authController;

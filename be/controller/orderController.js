@@ -15,7 +15,7 @@ orderController.createOrder = async(req, res)=>{
 		
 		return res.status(200).json({status:'ok', data:newOrder})
 	}catch(e){
-		return res.status(400).json({status:'fail', e})
+		return res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -23,9 +23,9 @@ orderController.createOrder = async(req, res)=>{
 orderController.getOrder=async(req, res)=>{
 	try{
 		const orderList = await Order.find()
-		res.status(200).json({status:'success', orderList })
+		res.status(200).json({status:'success', data: orderList })
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 

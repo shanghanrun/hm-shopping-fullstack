@@ -12,7 +12,7 @@ cartController.createItem = async(req, res)=>{
 		
 		return res.status(200).json({status:'ok', data:newCart})
 	}catch(e){
-		return res.status(400).json({status:'fail', e})
+		return res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -20,9 +20,9 @@ cartController.createItem = async(req, res)=>{
 cartController.getAllItems=async(req, res)=>{
 	try{
 		const cartList = await Cart.find()
-		res.status(200).json({status:'success', cartList })
+		res.status(200).json({status:'success', data:cartList })
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -32,7 +32,7 @@ cartController.deleteItem = async(req,res)=>{
 		await Cart.delete({_id:id})
 		res.status(200).json({status:'ok', message:'A Cart was deleted successfully' })
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -44,10 +44,10 @@ cartController.updateItemQty =async(req,res)=>{
 			{_id:id},
 			{ $set: {qty}}
 		)
-		updatedItem = Cart.findOne({_id:id})
+		const updatedItem = Cart.findOne({_id:id})
 		res.status(200).json({status:'ok', data:updatedItem})
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 

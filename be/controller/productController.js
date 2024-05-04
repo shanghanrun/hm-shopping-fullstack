@@ -11,7 +11,7 @@ productController.createProduct = async(req, res)=>{
 		
 		return res.status(200).json({status:'ok', data:newProduct})
 	}catch(e){
-		return res.status(400).json({status:'fail', message:e.message})
+		return res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -19,9 +19,9 @@ productController.createProduct = async(req, res)=>{
 productController.getAllProducts=async(req, res)=>{
 	try{
 		const productList = await Product.find()
-		res.status(200).json({status:'success', productList })
+		res.status(200).json({status:'success', data:productList })
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 productController.getProductById = async(req,res)=>{
@@ -32,7 +32,7 @@ productController.getProductById = async(req,res)=>{
 			res.status(200).json({status:'ok', data:foundProduct})
 		}
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -42,7 +42,7 @@ productController.deleteProduct = async(req,res)=>{
 		await Product.delete({_id:id})
 		res.status(200).json({status:'ok', message:'Product was deleted successfully' })
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -59,7 +59,7 @@ productController.updateProduct =async(req,res)=>{
 		updatedProduct = await Product.findOne({_id:id})
 		res.status(200).json({status:'ok', data:updatedProduct})
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
