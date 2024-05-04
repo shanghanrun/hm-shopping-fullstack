@@ -4,9 +4,9 @@ const productController={}
 
 productController.createProduct = async(req, res)=>{
 	try{
-		const {sku,name,image,category,description,stock,status,isDeleted} = req.body;
+		const {sku,name,image,category,description,stock,price,status,isDeleted} = req.body;
 
-		const newProduct = new Product({sku, name,image,category,description,stock,status,isDeleted})
+		const newProduct = new Product({sku, name,image,category,description,stock,price,status,isDeleted})
 		await newProduct.save()
 		
 		return res.status(200).json({status:'ok', data:newProduct})
