@@ -18,8 +18,16 @@ productController.createProduct = async(req, res)=>{
 
 productController.getAllProducts=async(req, res)=>{
 	try{
-		const productList = await Product.find()
+		const {page, name}= req.query  // ?뒤의 쿼리값
+		console.log('name :', name)
+		const condition = name? {name:{$regex:name, $options:'i'}} : {}
+		// const condition2 = ....  
+		let query = Product.find(condition) //함수를 만들어둠.
+		// query = Product.find(condition2)
+
+		const productList = await query.exec() 
 		res.status(200).json({status:'success', data:productList })
+		console.log('찾은 productList:', productList)
 	}catch(e){
 		res.status(400).json({status:'fail', error:e.message})
 	}
