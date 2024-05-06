@@ -43,9 +43,7 @@ const AdminProduct = () => {
     // const params = new URLSearchParams(searchQuery)
     // const urlQuery = params.toString()
     // console.log('query url:',urlQuery)
-    // navigate("?" + urlQuery)
-
-    
+    // navigate("?" + urlQuery)    
     const searchParamsString = new URLSearchParams(searchQuery).toString();
     navigate("?" + searchParamsString )    
   }, [searchQuery]);
