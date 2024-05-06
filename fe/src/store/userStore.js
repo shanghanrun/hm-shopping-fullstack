@@ -37,7 +37,7 @@ const userStore =create((set)=>({
 			set({user: u })
 			sessionStorage.setItem('token',t)
 		} catch(e){
-			console.log(e.message)
+			console.log('에러메시지:',e.message)
 			set({error:e.message})
 		}
 	},

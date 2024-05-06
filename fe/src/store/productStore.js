@@ -5,7 +5,7 @@ import { isEqual } from 'lodash';
 
 // const {showToastMessage} =uiStore() 이러면 useRef()에러 난다.
 
-const productStore =create((set, state)=>({
+const productStore =create((set,state)=>({
 	error:'',
 	selectedProduct:{},
 	productList:[],
@@ -32,13 +32,18 @@ const productStore =create((set, state)=>({
 			uiStore.getState().showToastMessage(e.message, 'error');
 		}
 	},
-	createProduct:async(formData)=>{
+	createProduct:async(formData, navigate)=>{
 		console.log('store로 받은 formData :', formData)
 		try{
 			const resp = await api.post('/product', formData)
 			if(resp.status !==200) throw new Error(resp.error)
 			console.log('성공한 데이터:', resp.data.data)
 			uiStore.getState().showToastMessage('상품가입을 완료했습니다.', 'success');
+
+			set((state)=>({productList: [...state.productList, resp.data.data]}))
+			navigate('/admin/product')
+			//이렇게 productList를 업데이트하면, 새로만든 물폼이 화면에 반영된다.
+
 		}catch(e){
 			console.log(e.message)
 			set({error: e.message})

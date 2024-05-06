@@ -4,23 +4,20 @@ import { Col, Row } from "react-bootstrap";
 import Sidebar from "../component/Sidebar";
 import Navbar from "../component/Navbar";
 import userStore from '../store/userStore'
-// import ToastMessage from "../component/ToastMessage";
-// import { useDispatch, useSelector } from "react-redux";
-// import { userActions } from "../action/userAction";
-// import { commonUiActions } from "../action/commonUiAction";
+import ToastMessage from "../component/ToastMessage";
+import uiStore from "../store/uiStore";
 
 const AppLayout = ({ children }) => {
+  const { toastMessage } = uiStore()
   const location = useLocation();
 	const {user} = userStore()
 
-  // const { user } = useSelector((state) => state.user);
   useEffect(() => {
-    // dispatch(userActions.loginWithToken());
   }, []);
 
   return (
     <div>
-      {/* <ToastMessage /> */}
+      <ToastMessage />
       {location.pathname.includes("admin") ? (
         <Row className="vh-100">
           <Col xs={12} md={3} className="sidebar mobile-sidebar">

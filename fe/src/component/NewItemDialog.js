@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {useNavigate} from 'react-router-dom'
 import { Form, Modal, Button, Row, Col } from "react-bootstrap";
 import CloudinaryUploadWidget from "../utils/CloudinaryUploadWidget";
 import { CATEGORY, STATUS, SIZE } from "../constants/product.constants";
@@ -19,6 +20,7 @@ const InitialFormData = {
 };
 const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const {error, selectedProduct,createProduct} = productStore()
+  const navigate = useNavigate()
   const [formData, setFormData] = useState(
     mode === "new" ? { ...InitialFormData } : selectedProduct
   );
@@ -51,8 +53,9 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     console.log('totalStock :', totalStock)
     if (mode === "new") {
       //새 상품 만들기
-      await createProduct({...formData, stock: totalStock}) 
+      await createProduct({...formData, stock: totalStock}, navigate) 
       setShowDialog(false)//창닫기
+      
     } else {
       // 상품 수정하기
     }
