@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -10,11 +10,22 @@ import {
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import userStore from '../store/userStore'
+import productStore from '../store/productStore'
 import cartStore from '../store/cartStore'
+import {useSearchParams} from 'react-router-dom'
 
 const Navbar = ({ user }) => {
+  let [width, setWidth] = useState(0);
+  let navigate = useNavigate();
+  const {getProductList} =productStore()
   const {cartItemCount} = cartStore()
-	const {user, logout} = userStore()
+	const {logout} = userStore()
+  const [query, setQuery] = useSearchParams()
+  const [searchQuery, setSearchQuery] =useState({
+    page: query.get('page') || 1,
+    name: query.get('name') || '',
+  })
+  const [keyword, setKeyword] = useState('')
 
 
   // const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
@@ -30,20 +41,35 @@ const Navbar = ({ user }) => {
     "Sale",
     "지속가능성",
   ];
-  let [width, setWidth] = useState(0);
-  let navigate = useNavigate();
-  const onCheckEnter = (event) => {
+  
+
+  const onCheckEnter = async (event) => {
     if (event.key === "Enter") {
-      if (event.target.value === "") {
-        return navigate("/");
+
+      query.set('page', searchQuery.page)
+      if(searchQuery.name ===''){
+        delete searchQuery.name
+      } else{
+        query.set('name', searchQuery.name)
       }
-      navigate(`?name=${event.target.value}`);
+      setSearchQuery({...searchQuery,page:1, name: event.target.value})
+      // navigate("?"+ query.toString())//이렇게 하면 페이지가 한박자 느리다.
     }
   };
   const getLogout = () => {
     navigate('/')
     logout()
   };
+
+  useEffect(()=>{
+    getProductList(searchQuery)
+    if(searchQuery.name === ''){
+      delete searchQuery.name;
+    }
+    
+    const searchParamsString = new URLSearchParams(searchQuery).toString();
+    navigate("?" + searchParamsString )
+  },[searchQuery])
   
   return (
     <div>
@@ -147,6 +173,8 @@ const Navbar = ({ user }) => {
               type="text"
               placeholder="제품검색"
               onKeyPress={onCheckEnter}
+              onChange={(e)=>setKeyword(e.target.value)}
+              value={keyword}
             />
           </div>
         )}

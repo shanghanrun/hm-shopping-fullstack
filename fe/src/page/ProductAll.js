@@ -10,16 +10,16 @@ const ProductAll = () => {
   const {productList, getProductList} = productStore()
   const error =false
   // 처음 로딩하면 상품리스트 불러오기
-  useEffect(()=>{
-    getProductList()
-  },[])
+  // useEffect(()=>{
+  //   getProductList()
+  // },[])
 
   return (
     <Container>
       <Row>
         {productList?.map((product,i) =>(
           <Col md={3} sm={12} key={i}>
-            <Productcard item={product}/>
+            <ProductCard item={product}/>
           </Col>
         ))}
       </Row>

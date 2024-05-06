@@ -5,11 +5,14 @@ import { isEqual } from 'lodash';
 
 // const {showToastMessage} =uiStore() 이러면 useRef()에러 난다.
 
-const productStore =create((set,state)=>({
+const productStore =create((set, state)=>({
 	error:'',
 	selectedProduct:{},
 	productList:[],
-		getProductList:async(searchQuery)=>{
+	getProductList:async(searchQuery)=>{
+		if(searchQuery.name === ''){
+			delete searchQuery.name;
+		}
 		try{
 			const resp= await api.get('/product', {params: {...searchQuery}})
 			if(resp.status !==200) throw new Error(resp.error)

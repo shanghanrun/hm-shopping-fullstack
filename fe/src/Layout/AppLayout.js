@@ -3,6 +3,7 @@ import { useLocation } from "react-router";
 import { Col, Row } from "react-bootstrap";
 import Sidebar from "../component/Sidebar";
 import Navbar from "../component/Navbar";
+import userStore from '../store/userStore'
 // import ToastMessage from "../component/ToastMessage";
 // import { useDispatch, useSelector } from "react-redux";
 // import { userActions } from "../action/userAction";
@@ -10,8 +11,7 @@ import Navbar from "../component/Navbar";
 
 const AppLayout = ({ children }) => {
   const location = useLocation();
-  // const dispatch = useDispatch();
-  const user = { level: "admin" }; // 로그인 기능 만들고 지우기
+	const {user} = userStore()
 
   // const { user } = useSelector((state) => state.user);
   useEffect(() => {

@@ -27,6 +27,8 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const handleClose = () => {
     //모든걸 초기화시키고;
     // 다이얼로그 닫아주기
+    setFormData({...InitialFormData}) //그런데 안먹힌다.
+    setShowDialog(false)
   };
 
   const handleSubmit = async(event) => {
@@ -49,7 +51,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     console.log('totalStock :', totalStock)
     if (mode === "new") {
       //새 상품 만들기
-      await createProduct({...formData, stock: totalStock})
+      await createProduct({...formData, stock: totalStock}) 
       setShowDialog(false)//창닫기
     } else {
       // 상품 수정하기
