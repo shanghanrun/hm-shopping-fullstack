@@ -1,8 +1,13 @@
 import {create} from 'zustand'
-import * as types from "../constants/commonUI.constants";
+//status는 success, error,info,warning
 
 const uiStore =create((set)=>({
-	showToastMessage:async(message,status)=>set()
+	toastMessage:{message:'', status:''},
+	isFullyLoaded:true, 
+	showToastMessage: (message, status) => {
+    set({ toastMessage: { message, status } });
+ 	},
 }))
+
 
 export default uiStore;

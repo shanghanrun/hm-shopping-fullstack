@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Form, Modal, Button, Row, Col } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import CloudinaryUploadWidget from "../utils/CloudinaryUploadWidget";
-import { productActions } from "../action/productAction";
 import { CATEGORY, STATUS, SIZE } from "../constants/product.constants";
 import "../style/adminProduct.style.css";
-import * as types from "../constants/product.constants";
-import { commonUiActions } from "../action/commonUiAction";
+
+import uiStore from '../store/uiStore';
+import productStore from '../store/productStore'
 
 const InitialFormData = {
   name: "",
@@ -19,26 +18,39 @@ const InitialFormData = {
   price: 0,
 };
 const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
-  const selectedProduct = useSelector((state) => state.product.selectedProduct);
-  const { error } = useSelector((state) => state.product);
+  const {error, selectedProduct,createProduct} = productStore()
   const [formData, setFormData] = useState(
     mode === "new" ? { ...InitialFormData } : selectedProduct
   );
   const [stock, setStock] = useState([]);
-  const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
   const handleClose = () => {
     //모든걸 초기화시키고;
     // 다이얼로그 닫아주기
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
+    // console.log('formData :', formData)
+    // [ ['s':3, 'xl':2] ] --> {s;3, xl;2}
     //재고를 입력했는지 확인, 아니면 에러
+    if(stock.length ===0) return setStockError(true) //return해야 다음진행안됨
     // 재고를 배열에서 객체로 바꿔주기
-    // [['M',2]] 에서 {M:2}로
+    // stock.map((item)=> ( {[item[0]]: item[1]} ) )  // [{},{}] 어레이이다.
+    // let newStock ={}
+    // stock.forEach((item)=>{
+    //   newStock = {...newStock, [item[0]]: parseInt(item[1])}
+    // })
+
+    // reduce(리듀스)를 사용하는 방법
+    const totalStock = stock.reduce((total, item)=>{
+      return {...total, [item[0]] : parseInt(item[1])}
+    },{})
+    console.log('totalStock :', totalStock)
     if (mode === "new") {
       //새 상품 만들기
+      await createProduct({...formData, stock: totalStock})
+      setShowDialog(false)//창닫기
     } else {
       // 상품 수정하기
     }
@@ -46,25 +58,39 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const handleChange = (event) => {
     //form에 데이터 넣어주기
+    const {id, value} = event.target
+    setFormData({...formData, [id]:value })
   };
 
   const addStock = () => {
     //재고타입 추가시 배열에 새 배열 추가
+    setStock([...stock, []])
   };
 
   const deleteStock = (idx) => {
     //재고 삭제하기
+    //배열에서의 요소 삭제는 filter로 하는 것이 가장 일반적이다.
+    const newStock = stock.filter((item,i)=> i !== idx)
+    setStock(newStock)
   };
 
   const handleSizeChange = (value, index) => {
     //  재고 사이즈 변환하기
+    // [["s",3], ['m',4],['xl',5]
+    const newStock = [...stock]
+    newStock[index][0] = value;
+    setStock(newStock);
   };
 
   const handleStockChange = (value, index) => {
     //재고 수량 변환하기
+    const newStock =[...stock]
+    newStock[index][1] = value
+    setStock(newStock)
   };
 
   const onHandleCategory = (event) => {
+    //이미 선택되었으면 제거
     if (formData.category.includes(event.target.value)) {
       const newCategory = formData.category.filter(
         (item) => item !== event.target.value
@@ -73,7 +99,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
         ...formData,
         category: [...newCategory],
       });
-    } else {
+    } else { //선택 안되었으면 추가
       setFormData({
         ...formData,
         category: [...formData.category, event.target.value],
@@ -83,6 +109,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const uploadImage = (url) => {
     //이미지 업로드
+    setFormData({...formData, image: url})
   };
 
   useEffect(() => {
@@ -94,7 +121,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
       }
     }
   }, [showDialog]);
-
   //에러나면 토스트 메세지 보여주기
 
   return (

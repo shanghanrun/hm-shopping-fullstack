@@ -9,13 +9,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../action/userAction";
+import userStore from '../store/userStore'
+import cartStore from '../store/cartStore'
 
 const Navbar = ({ user }) => {
-  // const dispatch = useDispatch();
-  // const { cartItemCount } = useSelector((state) => state.cart);
-  let cartItemCount =0
+  const {cartItemCount} = cartStore()
+	const {user, logout} = userStore()
+
+
   // const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   let isMobile = false
   const [showSearchBox, setShowSearchBox] = useState(false);
@@ -39,9 +40,11 @@ const Navbar = ({ user }) => {
       navigate(`?name=${event.target.value}`);
     }
   };
-  const logout = () => {
-    // dispatch(userActions.logout());
+  const getLogout = () => {
+    navigate('/')
+    logout()
   };
+  
   return (
     <div>
       {showSearchBox && (
@@ -88,7 +91,7 @@ const Navbar = ({ user }) => {
         <div>
           <div className="display-flex">
             {user ? (
-              <div onClick={logout} className="nav-icon">
+              <div onClick={getLogout} className="nav-icon">
                 <FontAwesomeIcon icon={faUser} />
                 {!isMobile && (
                   <span style={{ cursor: "pointer" }}>로그아웃</span>

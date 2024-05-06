@@ -1,33 +1,27 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
-// import { userActions } from "../action/userAction";
-
+import userStore from '../store/userStore'
 import "../style/login.style.css";
 
 const Login = () => {
-  // const dispatch = useDispatch();
+  const {user, error, loginWithEmail} = userStore()
   const navigate = useNavigate();
-  // const { user } = useSelector((state) => state.user);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const error = useSelector((state) => state.user.error);
-  let error=false
-  const user ={}
 
-  const loginWithEmail = (event) => {
-    event.preventDefault();
-    //이메일,패스워드를 가지고 백엔드로 보내기
-  };
-
+  const login= async(event)=>{
+		event.preventDefault();
+		await loginWithEmail({email,password})	
+	}
   const handleGoogleLogin = async (googleData) => {
     // 구글로 로그인 하기
   };
 
-  if (user) {
-    navigate("/");
-  }
+	if(user){
+		navigate('/')
+	}
+
   return (
     <>
       <Container className="login-area">
@@ -36,7 +30,7 @@ const Login = () => {
             <Alert variant="danger">{error}</Alert>
           </div>
         )}
-        <Form className="login-form" onSubmit={loginWithEmail}>
+        <Form className="login-form" onSubmit={login}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control
