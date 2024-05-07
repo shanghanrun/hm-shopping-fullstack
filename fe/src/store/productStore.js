@@ -101,7 +101,7 @@ const productStore =create((set,state)=>({
 			const resp = await api.get('/product/'+id)
 			if(resp.status !==200) throw new Error(resp.error)
 			console.log('성공한 데이터:', resp.data.data)
-			set({selectedData: resp.data.data})
+			set({selectedProduct: resp.data.data})
 			uiStore.getState().showToastMessage('상품 정보 획득.', 'success');
 
 			// navigate('/product/'+id) 현재페이지 url이 바뀔 필요없다.

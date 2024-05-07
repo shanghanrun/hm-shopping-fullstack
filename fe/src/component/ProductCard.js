@@ -5,14 +5,14 @@ import { currencyFormat } from "../utils/number";
 const ProductCard = ({item}) => {
 	const navigate = useNavigate()
   const showProduct = (id) => {
-    navigate(`product/${item._id}`)
+    navigate(`product/${id}`)
   };
   return (
-    <div className="card" onClick={showProduct}>
+    <div className="card" onClick={()=>showProduct(item._id)}>
       <img
         src={item.image} alt="" />
       <div>{item.name}</div>
-      <div>{item.price}</div>
+      <div>W {currencyFormat(item.price)}</div>
     </div>
   );
 };

@@ -15,19 +15,13 @@ const ProductAll = () => {
   //   getProductList()
   // },[])
 
-  function goDetail(id){
-    console.log('goDetail함수에 들어온 id:', id)
-    // navigate('/product/'+id)
-  }
-
+ 
   return (
     <Container>
       <Row>
         {productList?.map((product,i) =>(
           <Col md={3} sm={12} key={i}>
-            <ProductCard item={product}
-              onClick={()=>goDetail('123')}
-            />
+            <ProductCard item={product}/>
           </Col>
         ))}
       </Row>

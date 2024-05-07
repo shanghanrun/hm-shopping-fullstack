@@ -20,7 +20,7 @@ productController.createProduct = async(req, res)=>{
 productController.getAllProducts=async(req, res)=>{
 	try{
 		const {page, name}= req.query  // ?뒤의 쿼리값
-		const condition = name? {name:{$regex:name, $options:'i'}} : {}
+		const condition = name? {name:{$regex:name, $options:'i', isDeleted:false}} : {isDeleted:false}
 		// const condition2 = ....  
 		let query = Product.find(condition) //함수를 만들어둠.
 		// query = Product.find(condition2)
@@ -70,24 +70,37 @@ productController.updateProduct =async(req,res)=>{
 	}
 }
 
-productController.deleteProduct = async(req,res)=>{
-	try{
-		const id = req.params.id
-		const result = await Product.deleteOne({_id:id})
-		if (result.deletedCount === 1) {
-			res.status(200).json({ status: 'ok', message: 'Item deleted successfully' });
-		} else {
-			throw new Error("Item doesn't exist");
-		}
-	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
-	}
-}
+productController.deleteProduct =async(req, res)=>{
+  try {
+    const id = req.params.id;
+    const product = await Product.findByIdAndUpdate(
+      { _id: id },
+      { isDeleted: true }
+    );
+    if (!product) throw new Error("No item found");
+    res.status(200).json({ status: "success", message:'A item was deleted successfully' });
+  } catch (e) {
+    res.status(400).json({ status: "fail", message: e.message });
+  }
+};
+// productController.deleteProduct = async(req,res)=>{
+// 	try{
+// 		const id = req.params.id
+// 		const result = await Product.deleteOne({_id:id})
+// 		if (result.deletedCount === 1) {
+// 			res.status(200).json({ status: 'ok', message: 'Item deleted successfully' });
+// 		} else {
+// 			throw new Error("Item doesn't exist");
+// 		}
+// 	}catch(e){
+// 		res.status(400).json({status:'fail', message:e.message})
+// 	}
+// }
 productController.getProductById = async(req,res)=>{
 	try{
 		const id = req.params.id
-		const foundProduct = await Product.findOne({_id:id})
-		if (resp.status === 200) {
+		const foundProduct = await Product.findById(id)
+		if (foundProduct) {
 			res.status(200).json({ status: 'ok', data: foundProduct });
 		} else {
 			throw new Error("Item doesn't exist");

@@ -59,7 +59,18 @@ const ProductDetail = () => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="size-drop-down">
-              <Dropdown.Item>M</Dropdown.Item>
+              {Object.keys(selectedProduct.stock).length > 0 &&
+                Object.keys(selectedProduct.stock).map((sz) =>
+                  selectedProduct.stock[sz] > 0 ? (
+                    <Dropdown.Item eventKey={sz}>
+                      {sz.toUpperCase()}
+                    </Dropdown.Item>
+                  ) : (
+                    <Dropdown.Item eventKey={sz} disabled={true}>
+                      {sz.toUpperCase()}
+                    </Dropdown.Item>
+                  )
+                )}
             </Dropdown.Menu>
           </Dropdown>
           <div className="warning-message">
