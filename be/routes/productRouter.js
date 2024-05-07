@@ -6,7 +6,7 @@ const authController =require('../controller/authController')
 productRouter.post('/', authController.authenticate, authController.checkAdminPermission, productController.createProduct)
 productRouter.get('/', productController.getAllProducts)
 productRouter.get('/:id', productController.getProductById)
-productRouter.delete('/:id', productController.deleteProduct)
-productRouter.put('/:id', productController.updateProduct)
+productRouter.delete('/:id', authController.authenticate, authController.checkAdminPermission, productController.deleteProduct)
+productRouter.put('/:id', authController.authenticate, authController.checkAdminPermission, productController.updateProduct)
 
 module.exports =productRouter

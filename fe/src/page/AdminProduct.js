@@ -9,7 +9,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import ProductTable from "../component/ProductTable";
 
 const AdminProduct = () => {
-  const {productList, getProductList} = productStore()
+  const {productList, getProductList, totalPage, setSelectedProduct, deleteProduct} = productStore()
   const navigate = useNavigate();
   const [showDialog, setShowDialog] = useState(false);
 
@@ -32,7 +32,11 @@ const AdminProduct = () => {
   ];
 
   //상품리스트 가져오기 (url쿼리 맞춰서)
-
+  useEffect(()=>{
+    getProductList({...searchQuery})
+    console.log('query :', query.toString())
+    navigate("?" + query.toString() )
+  },[query])
   useEffect(() => {
     getProductList(searchQuery)
     //검색어나 페이지가 바뀌면 url바꿔주기 (검색어또는 페이지가 바뀜 => url 바꿔줌=> url쿼리 읽어옴=> 이 쿼리값 맞춰서  상품리스트 가져오기)
@@ -48,14 +52,17 @@ const AdminProduct = () => {
     navigate("?" + searchParamsString )    
   }, [searchQuery]);
 
-  const deleteItem = (id) => {
+  const deleteItem = async (id) => {
     //아이템 삭제하가ㅣ
+    await deleteProduct(id, navigate)
   };
 
   const openEditForm = (product) => {
     //edit모드로 설정하고
-    // 아이템 수정다이얼로그 열어주기y
-
+    // 아이템 수정다이얼로그 열어주기
+    setMode('edit')
+    setSelectedProduct(product)
+    setShowDialog(true)
   };
 
   const handleClickNewItem = () => {
@@ -98,8 +105,8 @@ const AdminProduct = () => {
           nextLabel="next >"
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
-          pageCount={100} //전체페이지
-          forcePage={2} // 1페이지면 2임 여긴 한개씩 +1 해야함
+          pageCount={totalPage} //전체페이지
+          forcePage={searchQuery.page -1} // 1페이지면 2임 여긴 한개씩 +1 해야함
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           pageClassName="page-item"

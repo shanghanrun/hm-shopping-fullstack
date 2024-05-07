@@ -19,10 +19,12 @@ const InitialFormData = {
   price: 0,
 };
 const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
-  const {error, selectedProduct,createProduct} = productStore()
+  const {error, selectedProduct,createProduct,editProduct} = productStore()
+  console.log('newItemDialog selectedProduct :', selectedProduct)
   const navigate = useNavigate()
+  // const [selectedFormData, setSelectedFormData]=useState({})
   const [formData, setFormData] = useState(
-    mode === "new" ? { ...InitialFormData } : selectedProduct
+    mode === "new" ? { ...InitialFormData } : {}
   );
   const [stock, setStock] = useState([]);
   const [stockError, setStockError] = useState(false);
@@ -58,6 +60,8 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
       
     } else {
       // 상품 수정하기
+      await editProduct({...formData, stock:totalStock}, navigate)
+      setShowDialog(false)
     }
   };
 
@@ -117,12 +121,35 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     setFormData({...formData, image: url})
   };
 
+  const convertSelectedProduct=(product)=>{
+    const stock =[]
+    const keys = Object.keys(product.stock)
+    console.log('keys :', keys)
+    keys.forEach((key)=>{
+      stock.push([key, product.stock[key]])
+    })
+    console.log('변환된 stock :', stock)
+    setStock(stock)
+    console.log('변환된 selected product:', {...product, stock})
+    return {...product, stock}
+  }
+  const convert=(product)=>{
+    const stock = Object.keys(product.stock).map((key)=>[key,product.stock[key]])
+    setStock(stock)
+    return {...product, stock}
+  }
   useEffect(() => {
     if (showDialog) {
       if (mode === "edit") {
         // 선택된 데이터값 불러오기 (재고 형태 객체에서 어레이로 바꾸기)
+        const result = convertSelectedProduct(selectedProduct)
+        setFormData(result)
+        
       } else {
         // 초기화된 값 불러오기
+        // 이것은 의미 없을 것 같기도 한데...
+        setFormData({...InitialFormData})
+        setStock([])
       }
     }
   }, [showDialog]);

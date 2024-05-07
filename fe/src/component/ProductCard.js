@@ -5,7 +5,7 @@ import { currencyFormat } from "../utils/number";
 const ProductCard = ({item}) => {
 	const navigate = useNavigate()
   const showProduct = (id) => {
-    navigate(`product/${item.id}`)
+    navigate(`product/${item._id}`)
   };
   return (
     <div className="card" onClick={showProduct}>

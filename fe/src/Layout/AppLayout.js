@@ -10,14 +10,15 @@ import uiStore from "../store/uiStore";
 const AppLayout = ({ children }) => {
   const { toastMessage } = uiStore()
   const location = useLocation();
-	const {user} = userStore()
+	const {user, loginWithToken} = userStore()
 
   useEffect(() => {
+    loginWithToken()
   }, []);
 
   return (
     <div>
-      <ToastMessage />
+      <ToastMessage toastMessage={toastMessage}/>
       {location.pathname.includes("admin") ? (
         <Row className="vh-100">
           <Col xs={12} md={3} className="sidebar mobile-sidebar">

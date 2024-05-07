@@ -22,7 +22,7 @@ const Navbar = ({ user }) => {
 	const {logout} = userStore()
   const [query, setQuery] = useSearchParams()
   const [searchQuery, setSearchQuery] =useState({
-    page: query.get('page') || 1,
+    // page: query.get('page') || 1,
     name: query.get('name') || '',
   })
   const [keyword, setKeyword] = useState('')
@@ -52,7 +52,7 @@ const Navbar = ({ user }) => {
       } else{
         query.set('name', searchQuery.name)
       }
-      setSearchQuery({...searchQuery,page:1, name: event.target.value})
+      setSearchQuery({...searchQuery, name: event.target.value})
       // navigate("?"+ query.toString())//이렇게 하면 페이지가 한박자 느리다.
     }
   };
