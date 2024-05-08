@@ -18,7 +18,8 @@ const Navbar = ({ user }) => {
   let [width, setWidth] = useState(0);
   let navigate = useNavigate();
   const {getProductList} =productStore()
-  const {cartItemCount} = cartStore()
+  const {getCartList, cartList, emptyStoreCartList} = cartStore()
+ 
 	const {logout} = userStore()
   const [query, setQuery] = useSearchParams()
   const [searchQuery, setSearchQuery] =useState({
@@ -53,16 +54,20 @@ const Navbar = ({ user }) => {
         query.set('name', searchQuery.name)
       }
       setSearchQuery({...searchQuery, name: event.target.value})
-      // navigate("?"+ query.toString())//이렇게 하면 페이지가 한박자 느리다.
     }
   };
   const getLogout = () => {
     navigate('/')
     logout()
+    emptyStoreCartList()
   };
 
   useEffect(()=>{
     getProductList(searchQuery)
+    if(user){
+      getCartList(user._id)
+    }
+
     if(searchQuery.name === ''){
       delete searchQuery.name;
     }
@@ -133,7 +138,7 @@ const Navbar = ({ user }) => {
               <FontAwesomeIcon icon={faShoppingBag} />
               {!isMobile && (
                 <span style={{ cursor: "pointer" }}>{`쇼핑백(${
-                  cartItemCount || 0
+                  cartList?.length || 0
                 })`}</span>
               )}
             </div>

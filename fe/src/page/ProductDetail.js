@@ -4,6 +4,7 @@ import { Container, Row, Col, Button, Dropdown } from "react-bootstrap";
 import { ColorRing } from "react-loader-spinner";
 
 import productStore from '../store/productStore'
+import userStore from '../store/userStore'
 import cartStore from '../store/cartStore'
 import uiStore from '../store/uiStore'
 import { currencyFormat } from "../utils/number";
@@ -11,6 +12,9 @@ import "../style/productDetail.style.css";
 
 const ProductDetail = () => {
   const {selectedProduct, getProduct} = productStore()
+  const {user} = userStore()
+  const {addToCart} = cartStore()
+  console.log('디테일 페이지 selectedProduct:', selectedProduct)
   const [size, setSize] = useState("");
   const { id } = useParams();
   console.log('받은 id :', id)
@@ -20,12 +24,23 @@ const ProductDetail = () => {
 
   const addItemToCart = () => {
     //사이즈를 아직 선택안했다면 에러
-    // 아직 로그인을 안한유저라면 로그인페이지로  // 카트에 아이템 추가하기
-  };
+    // 아직 로그인을 안한 유저라면 로그인페이지로  
+    // 카트에 아이템 추가하기
+    if(size ===''){
+      setSizeError(true)
+      return;
+    }
+    if(!user) navigate('/login')
+    addToCart({id, size})
+    
+  }
   const selectSize = (value) => {
     // 사이즈 추가하기
+    console.log('선택 value :',value)
+    setSize(value)
+    setSizeError(false)
   };
-  //카트에러가 있으면 에러메세지 보여주기   //에러가 있으면 에러메세지 보여주기
+
   useEffect(() => {
     //상품 디테일 정보 가져오기
     getProduct(id)
@@ -59,14 +74,14 @@ const ProductDetail = () => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="size-drop-down">
-              {Object.keys(selectedProduct.stock).length > 0 &&
-                Object.keys(selectedProduct.stock).map((sz) =>
-                  selectedProduct.stock[sz] > 0 ? (
-                    <Dropdown.Item eventKey={sz}>
+              { selectedProduct && Object.keys(selectedProduct?.stock).length > 0 &&
+                Object.keys(selectedProduct?.stock).map((sz, i) =>
+                  selectedProduct?.stock[sz] > 0 ? (
+                    <Dropdown.Item key={i} eventKey={sz}>
                       {sz.toUpperCase()}
                     </Dropdown.Item>
                   ) : (
-                    <Dropdown.Item eventKey={sz} disabled={true}>
+                    <Dropdown.Item key={i} eventKey={sz} disabled={true}>
                       {sz.toUpperCase()}
                     </Dropdown.Item>
                   )

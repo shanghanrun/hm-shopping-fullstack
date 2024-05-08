@@ -1,32 +1,44 @@
 const Cart = require('../model/Cart')
+const Product = require('../model/Product')
 
 const cartController={}
 
-cartController.createItem = async(req, res)=>{
+cartController.createCartItem = async(req, res)=>{
 	try{
-		const {items} = req.body;
+		const {id, size} = req.body;
 		const userId = req.userId
+		// const product = await Product.findById(id)
 		
-		const newCart = new Cart({userId, items})
-		await newCart.save()
+		const newCartItem = new Cart({
+			userId, 
+			items:[
+				{
+					productId: id,
+					size
+				}
+			]
+		})
+		await newCartItem.save()
 		
-		return res.status(200).json({status:'ok', data:newCart})
+		return res.status(200).json({status:'ok', data:newCartItem})
 	}catch(e){
 		return res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
 
-cartController.getAllItems=async(req, res)=>{
+cartController.getCartList=async(req, res)=>{
 	try{
-		const cartList = await Cart.find()
+		const userId = req.params.id
+		const cartList = await Cart.find({userId: userId}).populate('items.productId').populate('userId')
+
 		res.status(200).json({status:'success', data:cartList })
 	}catch(e){
 		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
-cartController.deleteItem = async(req,res)=>{
+cartController.deleteCartItem = async(req,res)=>{
 	try{
 		const id = req.params.id
 		await Cart.delete({_id:id})

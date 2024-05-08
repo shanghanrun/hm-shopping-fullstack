@@ -1,16 +1,19 @@
-import React from "react";
+import React, {useState} from "react";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Row, Col, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch } from "react-redux";
-import { cartActions } from "../action/cartAction";
+// import { useDispatch } from "react-redux";
+// import { cartActions } from "../action/cartAction";
 import { currencyFormat } from "../utils/number";
 
 const CartProductCard = ({ item }) => {
-  const dispatch = useDispatch();
+  // const [total, setTotal] = useState(item.price)
+  const [quantity, setQuantity] = useState(1)
+  // const dispatch = useDispatch();
 
   const handleQtyChange = () => {
     //아이템 수량을 수정한다
+
   };
 
   const deleteCart = (id) => {
@@ -21,14 +24,11 @@ const CartProductCard = ({ item }) => {
     <div className="product-card-cart">
       <Row>
         <Col md={2} xs={12}>
-          <img
-            src="https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2Fb3%2F10%2Fb310d46e8f33571ea44cc4facf3cd224a90ef3d4.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]"
-            width={112}
-          />
+          <img src={item.items[0].productId.image} width={112} alt='' />
         </Col>
         <Col md={10} xs={12}>
           <div className="display-flex space-between">
-            <h3>리넨셔츠</h3>
+            <h3>{item.items[0].productId.name}</h3>
             <button className="trash-button">
               <FontAwesomeIcon
                 icon={faTrash}
@@ -39,10 +39,10 @@ const CartProductCard = ({ item }) => {
           </div>
 
           <div>
-            <strong>₩ 45,000</strong>
+            <strong>₩ {currencyFormat(item.items[0].productId.price)}</strong>
           </div>
-          <div>Size: Menu</div>
-          <div>Total: ₩ 45,000</div>
+          <div>Size: {item.items[0].size}</div>
+          <div>Total: ₩ {currencyFormat(item.items[0].productId.price * quantity)}</div>
           <div>
             Quantity:
             <Form.Select

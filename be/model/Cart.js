@@ -10,7 +10,7 @@ const cartSchema = Schema({
 		size:{type:String, required:true},
 		qty:{type:Number, default:1, required:true}
 	}]
-},{timestamps:true})
+},{timestamps:true, strictPopulate: false})
 
 cartSchema.methods.toJSON =function(){
 	const obj = this._doc

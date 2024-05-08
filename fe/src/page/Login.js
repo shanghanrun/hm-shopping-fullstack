@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import userStore from '../store/userStore'
@@ -18,9 +18,16 @@ const Login = () => {
     // 구글로 로그인 하기
   };
 
-	if(user){
-		navigate('/')
-	}
+	// if(user){
+	// 	navigate('/')
+	// }
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
 
   return (
     <>
