@@ -5,22 +5,33 @@ const cartController={}
 
 cartController.createCartItem = async(req, res)=>{
 	try{
-		const {id, size} = req.body;
+		const {productId, size} = req.body;
 		const userId = req.userId
-		// const product = await Product.findById(id)
-		
-		const newCartItem = new Cart({
-			userId, 
-			items:[
-				{
-					productId: id,
-					size
+		//중복을 방지하기 위해, 유저정보로 카트찾기.
+		const cartList = await Cart.find({ userId });
+		console.log('백앤드 찾은 cartList:', cartList)
+		for (const currentCart of cartList) {
+			if (currentCart) { //currentCart가 존재해야
+				const isExist = currentCart.items[0].item.productId.equals(productId) && currentCart.items[0].size === size;
+				if (isExist) {
+					console.log('존재함')
+					throw new Error('아이템이 이미 담겨 있습니다.');
 				}
-			]
-		})
-		await newCartItem.save()
-		
-		return res.status(200).json({status:'ok', data:newCartItem})
+			}
+		}
+
+		// 새로운 카트 생성 및 아이템 추가
+		const cart = new Cart({
+			userId,
+			items: [{
+				productId,
+				size
+			}]
+		});
+		await cart.save();
+
+		return res.status(200).json({ status: 'ok', data: cart });
+
 	}catch(e){
 		return res.status(400).json({status:'fail', error:e.message})
 	}

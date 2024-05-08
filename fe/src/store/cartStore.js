@@ -6,9 +6,9 @@ const cartStore =create((set,state)=>({
 	error:'',
 	cartList:[],
 	// cartCount:0,
-	addToCart: async({id,size}) => {
+	addToCart: async({productId,size}) => {
 		try{
-			const resp = await api.post('/cart',{id,size})
+			const resp = await api.post('/cart',{productId,size})
 			if(resp.status !==200) throw new Error(resp.error)
 			console.log('성공한 데이터:', resp.data.data)
 			uiStore.getState().showToastMessage('카트에 추가했습니다.', 'success');
