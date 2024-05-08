@@ -19,7 +19,7 @@ const ProductAll = () => {
   //   getProductList()
   // },[])
   useEffect(()=>{
-    if(user) getCartList(user._id)
+    // if(user) getCartList(user._id)
     //여기서 cartStore의 cartList를 업데이트하면,
     // Navbar에서 cartList를 구독하고 있으므로,업데이트가 된다.
   },[])

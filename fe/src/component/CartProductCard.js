@@ -24,11 +24,11 @@ const CartProductCard = ({ item }) => {
     <div className="product-card-cart">
       <Row>
         <Col md={2} xs={12}>
-          <img src={item.items[0].productId.image} width={112} alt='' />
+          <img src="https://res.cloudinary.com/dscla3iqu/image/upload/v1714914629/fvq7uu5qriukv3mde5zb.webp" width={112} alt='' />
         </Col>
         <Col md={10} xs={12}>
           <div className="display-flex space-between">
-            <h3>{item.items[0].productId.name}</h3>
+            <h3>하드코딩 상품명</h3>
             <button className="trash-button">
               <FontAwesomeIcon
                 icon={faTrash}
@@ -39,10 +39,10 @@ const CartProductCard = ({ item }) => {
           </div>
 
           <div>
-            <strong>₩ {currencyFormat(item.items[0].productId.price)}</strong>
+            <strong>₩ 7,000</strong>
           </div>
-          <div>Size: {item.items[0].size}</div>
-          <div>Total: ₩ {currencyFormat(item.items[0].productId.price * quantity)}</div>
+          <div>Size: xl</div>
+          <div>Total: ₩ 7,000</div>
           <div>
             Quantity:
             <Form.Select

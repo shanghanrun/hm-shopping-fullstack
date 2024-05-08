@@ -30,7 +30,9 @@ const ProductDetail = () => {
       setSizeError(true)
       return;
     }
-    if(!user) navigate('/login')
+    if(!user) {navigate('/login')}
+    
+    console.log('productDetail페이지 id:', id)
     addToCart({id, size})
     
   }

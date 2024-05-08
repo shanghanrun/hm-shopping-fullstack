@@ -65,7 +65,7 @@ const Navbar = ({ user }) => {
   useEffect(()=>{
     getProductList(searchQuery)
     if(user){
-      getCartList(user._id)
+      // getCartList(user._id)
     }
 
     if(searchQuery.name === ''){
@@ -138,7 +138,7 @@ const Navbar = ({ user }) => {
               <FontAwesomeIcon icon={faShoppingBag} />
               {!isMobile && (
                 <span style={{ cursor: "pointer" }}>{`쇼핑백(${
-                  cartList?.length || 0
+                   0
                 })`}</span>
               )}
             </div>
