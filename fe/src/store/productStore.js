@@ -33,7 +33,8 @@ const productStore =create((set,state)=>({
 		}catch(e){
 			console.log('e.error:', e.error)
 			set({error: e.error})
-			uiStore.getState().showToastMessage(e.error, 'error');
+			// uiStore.getState().showToastMessage(e.error, 'error');
+			// payment페이지처럼 페이지네이션 안된 곳에서 에러메시지 안나오도록
 		}
 	},
 	createProduct:async(formData, navigate)=>{

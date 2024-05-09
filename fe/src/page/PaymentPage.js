@@ -3,15 +3,14 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import OrderReceipt from "../component/OrderReceipt";
 import PaymentForm from "../component/PaymentForm";
 import "../style/paymentPage.style.css";
-import { useSelector, useDispatch } from "react-redux";
-import { orderActions } from "../action/orderAction";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { commonUiActions } from "../action/commonUiAction";
 import { cc_expires_format } from "../utils/number";
+import orderStore from '../store/orderStore'
+import uiStore from '../store/uiStore'
 
 const PaymentPage = () => {
-  const dispatch = useDispatch();
+  const {order} = orderStore()
 
   const [cardValue, setCardValue] = useState({
     cvc: "",
@@ -30,7 +29,7 @@ const PaymentPage = () => {
     city: "",
     zip: "",
   });
-
+  console.log('shipInfo :', shipInfo)
   //맨처음 페이지 로딩할때는 넘어가고  오더번호를 받으면 성공페이지로 넘어가기
 
   const handleSubmit = (event) => {
@@ -40,10 +39,18 @@ const PaymentPage = () => {
 
   const handleFormChange = (event) => {
     //shipInfo에 값 넣어주기
+    const {name,value} = event.target
+    if(name === "expiry"){
+      let newValue = cc_expires_format(value) 
+      return setShipInfo({...shipInfo, [name]: newValue})
+    }
+    setShipInfo({...shipInfo, [name]: value})
   };
 
   const handlePaymentInfoChange = (event) => {
     //카드정보 넣어주기
+    const {name,value} =event.target
+    setCardValue({...cardValue, [name]:value})
   };
 
   const handleInputFocus = (e) => {
@@ -125,7 +132,10 @@ const PaymentPage = () => {
                 <div>
                   <h2 className="payment-title">결제 정보</h2>
                 </div>
-
+                <PaymentForm cardValue={cardValue}
+                  handleInputFocus={handleInputFocus}
+                  handlePaymentInfoChange={handlePaymentInfoChange}
+                />
                 <Button
                   variant="dark"
                   className="payment-button pay-button"
