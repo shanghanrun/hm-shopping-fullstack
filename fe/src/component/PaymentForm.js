@@ -47,7 +47,7 @@ const PaymentForm = ({
               <Form.Control
                 type="text"
                 name="expiry"
-                placeholder="MM/DD"
+                placeholder="MM/YY"
                 onChange={handlePaymentInfoChange}
                 onFocus={handleInputFocus}
                 required

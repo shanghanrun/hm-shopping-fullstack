@@ -7,7 +7,7 @@ const userStore =create((set)=>({
 	user:null,
 	error:'',
 	// loading:true,
-
+	setError:(val)=>set({error:val}),
 	loginWithToken: async ()=> {
 		// const token= sessionStorage.getItem('token') 이것 필요없다. api에서 알아서 해더에 넣도록 설정해 두었다.
 		try{

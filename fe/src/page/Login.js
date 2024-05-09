@@ -5,7 +5,7 @@ import userStore from '../store/userStore'
 import "../style/login.style.css";
 
 const Login = () => {
-  const {user, error, loginWithEmail} = userStore()
+  const {user, error, setError, loginWithEmail} = userStore()
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +23,7 @@ const Login = () => {
 	// }
 
   useEffect(() => {
+    setError(false)//기존 에러를 초기화
     if (user) {
       navigate("/");
     }

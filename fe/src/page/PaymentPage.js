@@ -8,9 +8,13 @@ import { useNavigate } from "react-router";
 import { cc_expires_format } from "../utils/number";
 import orderStore from '../store/orderStore'
 import uiStore from '../store/uiStore'
+import cartStore from '../store/cartStore'
 
 const PaymentPage = () => {
-  const {order} = orderStore()
+  const {setShip, setPayment,createOrder} = orderStore()
+  const {cart, cartForOrder} = cartStore()
+  const {showToastMessage} = uiStore()
+  const {totalPrice} = orderStore()
 
   const [cardValue, setCardValue] = useState({
     cvc: "",
@@ -34,22 +38,43 @@ const PaymentPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    //오더 생성하가ㅣ
+    if(!cart){
+      showToastMessage('결제할 아이템이 없습니다. 첫페이지로 이동합니다.', 'error')
+      setTimeout(() => {
+        navigate('/')
+      }, 3000);
+    } else{
+      //오더 생성하가ㅣ
+    setShip(shipInfo)
+    setPayment(cardValue)
+
+    const {firstName,lastName,contact,address,city,zip} = shipInfo
+    const {cvc, expiry,name,number} =cardValue
+
+    const data ={
+      totalPrice, shipTo:{address,city,zip},
+      contact:{firstName,lastName,contact},
+      items: [...cartForOrder.items, ]
+    }
+
+    createOrder(data)
+    navigate('/payment/success')
+    }  
   };
 
   const handleFormChange = (event) => {
     //shipInfo에 값 넣어주기
     const {name,value} = event.target
-    if(name === "expiry"){
-      let newValue = cc_expires_format(value) 
-      return setShipInfo({...shipInfo, [name]: newValue})
-    }
     setShipInfo({...shipInfo, [name]: value})
   };
 
   const handlePaymentInfoChange = (event) => {
     //카드정보 넣어주기
     const {name,value} =event.target
+    if(name === "expiry"){
+      let newValue = cc_expires_format(value) 
+      return setCardValue({...shipInfo, [name]: newValue})
+    }
     setCardValue({...cardValue, [name]:value})
   };
 
@@ -148,7 +173,7 @@ const PaymentPage = () => {
           </div>
         </Col>
         <Col lg={5} className="receipt-area">
-          {/* <OrderReceipt /> */}
+          <OrderReceipt items={cart.items}/>
         </Col>
       </Row>
     </Container>

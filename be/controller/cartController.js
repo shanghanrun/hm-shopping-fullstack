@@ -49,6 +49,30 @@ cartController.getCart=async(req, res)=>{
 		res.status(400).json({status:'fail', error:e.message})
 	}
 }
+cartController.getCartForOrder=async(req, res)=>{
+	try{
+		const userId = req.userId
+		const cart = await Cart.findOne({userId}).populate('items.productId').populate('userId')
+
+		const cartForOrder = await Cart.findOne({userId})
+
+		const list1 = [...cart.items] 
+		const len = list1.length
+		// [ 
+		// { productId: { price: , _id: ...}, size:'' },
+		// { productId: {price: , _id:.. }, size:''}
+		//]
+		const list2 = [...cartForOrder.items]
+		for (let i=0; i<len; i++){
+			list2[i][price] = list1[i][productId][price]
+		}
+		cartForOrder.items = list2
+
+		res.status(200).json({status:'success', data:cartForOrder })
+	}catch(e){
+		res.status(400).json({status:'fail', error:e.message})
+	}
+}
 
 cartController.deleteCartItem = async(req,res)=>{
 	try{

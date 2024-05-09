@@ -4,15 +4,21 @@ import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import { currencyFormat } from "../utils/number";
 import cartStore from '../store/cartStore'
+import uiStore from '../store/uiStore'
+import orderStore from '../store/orderStore'
 
 const OrderReceipt = ({items}) => {
+  const {showToastMessage} = uiStore()
+  const {getCartForOrder} = cartStore()
   const location = useLocation();
   const navigate = useNavigate();
   const [total, setTotal] = useState(0);
+  const {setTotalPrice} = orderStore()
 
   useEffect(()=>{
     const newTotal = items.reduce((sum, item) => sum + (item.productId.price * item.qty), 0);
     setTotal(newTotal);
+    setTotalPrice(newTotal)
   },[items])
 
   return (
@@ -40,7 +46,16 @@ const OrderReceipt = ({items}) => {
         <Button
           variant="dark"
           className="payment-button"
-          onClick={() => navigate("/payment")}
+          onClick={async() => {
+            if(items.length===0){
+              showToastMessage('결제할 아이템이 없습니다. 첫페이지로 이동합니다.', 'error')
+              setTimeout(() => {
+                navigate('/')
+              }, 3000);
+            } else{
+              await getCartForOrder()
+              navigate("/payment")}
+            }}
         >
           결제 계속하기
         </Button>
