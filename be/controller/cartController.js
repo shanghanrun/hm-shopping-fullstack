@@ -6,12 +6,9 @@ const cartController={}
 cartController.createCartItem = async(req, res)=>{
 	try{
 		const {productId, size} = req.body;
-		console.log('백앤드 productId', productId)
-		console.log('req.body', req.body)
 		const userId = req.userId
 		//중복을 방지하기 위해, 유저정보로 카트찾기.
 		let cart = await Cart.findOne({userId})
-		console.log('찾은 cart:', cart)
 		if(cart){
 			const existItem = cart.items.find((item)=>item.productId.equals(productId) && item.size ===size)
 			//(cart.items가 배열이기 때문에 이런 find메소드 가능하다)
@@ -26,6 +23,7 @@ cartController.createCartItem = async(req, res)=>{
 		} else{
 			cart = new Cart({userId})
 			await cart.save()
+			console.log('빈 카트 모양: ', cart)
 
 			cart.items = [...cart.items, {productId, size}]  // cart가 몽고디비로 만든 인스턴스이지만 그러면서 객체이다.
 			await cart.save() //변화된 cart객체값을 db에 다시 저장해서 수정한다.
@@ -56,10 +54,16 @@ cartController.deleteCartItem = async(req,res)=>{
 	try{
 		const userId = req.userId
 		const productId = req.params.id
+		const {size} = req.body
+		console.log('삭제할 productId :', productId)
+		console.log('삭제할 size :', size)
 		const cart = await Cart.findOne({userId})
-		const newItems = cart.items.filter((item)=>
-			item.productId !== productId
-		)
+		console.log('user의 cart :', cart)
+		console.log('userCart.items :', cart.items)
+		const newItems = cart.items.filter(item =>
+			!(item.productId.equals(productId) && item.size === size)
+		);
+		console.log('삭제를 하고 난 나머지 items :', newItems)
 		cart.items = [...newItems]
 		await cart.save()
 		res.status(200).json({status:'ok', data:cart, cartItemQty: cart.items.length })
@@ -69,20 +73,23 @@ cartController.deleteCartItem = async(req,res)=>{
 }
 
 cartController.updateItemQty =async(req,res)=>{
-	try{
+	try {
 		const userId = req.userId
 		const productId = req.params.id
-		const {qty} = req.body;
-		const cart = await Cart.findOne({userId})
-		const foundItem = cart.items.find((item)=>
-			item.productId === productId
-		)
-		foundItem.qty = qty
-		const newItems = [...cart.items, foundItem]
-		cart.items = [...newItems]
-		await cart.save()
+		const {size, qty} = req.body;
+		const updatedCart = await Cart.findOneAndUpdate(
+			{ userId, 'items.productId': productId, 'items.size': size },
+			{ $set: { 'items.$.qty': qty } },
+			{ new: true }
+		).populate('items.productId').populate('userId');
 		
-		res.status(200).json({status:'ok', data:cart, cartItemQty: cart.items.length})
+		console.log('업데이트 된 카트:', updatedCart)
+
+		if (!updatedCart) {
+			return res.status(404).json({ status: 'fail', error: 'Cart not found or item not found in cart' });
+		}
+		
+		res.status(200).json({status:'ok', data: updatedCart})
 	}catch(e){
 		res.status(400).json({status:'fail', error:e.message})
 	}

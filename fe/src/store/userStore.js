@@ -1,5 +1,7 @@
 import {create} from 'zustand'
 import api from '../utils/api'
+import uiStore from './uiStore'
+import cartStore from './cartStore'
 
 const userStore =create((set)=>({
 	user:null,
@@ -16,7 +18,7 @@ const userStore =create((set)=>({
 			const u = await resp.data.user
 			set({user: u})
 		} catch(e){
-			console.log(e.message)
+			console.log('e.error:', e.error)
 			// set({error:e.message}) 이걸 안해야 Login페이지에 쓸데없는 에러메시지가 안나온다.
 			set({error: ''})
 			// this.logout()  zustand this사용 못한다.
@@ -37,13 +39,15 @@ const userStore =create((set)=>({
 			set({user: u })
 			sessionStorage.setItem('token',t)
 		} catch(e){
-			console.log('에러메시지:',e.message)
-			set({error:e.message})
+			console.log('e.error:', e.error)
+			set({error: e.error})
+			uiStore.getState().showToastMessage(e.error, 'error');
 		}
 	},
 	logout:()=> {
 		sessionStorage.clear()
 		set({user:null})
+		cartStore.getState().zeroCartCount()
 	},
 	loginWithGoogle: async ()=>set(),
 	registerUser: async({name,email,password}, navigate, showToastMessage)=>{
@@ -57,7 +61,7 @@ const userStore =create((set)=>({
 			navigate('/login')
 
 		}catch(e){
-			console.log(e.message)
+			console.log(e.error)
 			showToastMessage('회원가입실패','error')
 		}
 	},

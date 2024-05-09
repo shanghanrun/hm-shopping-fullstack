@@ -31,8 +31,9 @@ const productStore =create((set,state)=>({
 			}
 			set({productList: list})	
 		}catch(e){
-			set({error: e.message})
-			uiStore.getState().showToastMessage(e.message, 'error');
+			console.log('e.error:', e.error)
+			set({error: e.error})
+			uiStore.getState().showToastMessage(e.error, 'error');
 		}
 	},
 	createProduct:async(formData, navigate)=>{
@@ -48,9 +49,9 @@ const productStore =create((set,state)=>({
 			//이렇게 productList를 업데이트하면, 새로만든 물폼이 화면에 반영된다.
 
 		}catch(e){
-			console.log(e.message)
-			set({error: e.message})
-			uiStore.getState().showToastMessage(e.message, 'error');
+			console.log('e.error:', e.error)
+			set({error: e.error})
+			uiStore.getState().showToastMessage(e.error, 'error');
 		}
 	},
 	setSelectedProduct:(product)=>{
@@ -73,9 +74,9 @@ const productStore =create((set,state)=>({
 			//이렇게 하면, 페이지가 열리면서 자연스럽게 새로운 productList를 받아오게 된다.
 
 		}catch(e){
-			console.log(e.message)
-			set({error: e.message})
-			uiStore.getState().showToastMessage(e.message, 'error');
+			console.log('e.error:', e.error)
+			set({error: e.error})
+			uiStore.getState().showToastMessage(e.error, 'error');
 		}
 	},
 	deleteProduct:async(id,navigate)=>{
@@ -90,9 +91,9 @@ const productStore =create((set,state)=>({
 			//이렇게 하면, 페이지가 열리면서 자연스럽게 새로운 productList를 받아오게 된다.
 
 		}catch(e){
-			console.log(e.message)
-			set({error: e.message})
-			uiStore.getState().showToastMessage(e.message, 'error');
+			console.log('e.error:', e.error)
+			set({error: e.error})
+			uiStore.getState().showToastMessage(e.error, 'error');
 		}
 	},
 	getProduct:async(id)=>{
@@ -102,14 +103,14 @@ const productStore =create((set,state)=>({
 			if(resp.status !==200) throw new Error(resp.error)
 			console.log('성공한 데이터:', resp.data.data)
 			set({selectedProduct: resp.data.data})
-			uiStore.getState().showToastMessage('상품 정보 획득.', 'success');
+			// uiStore.getState().showToastMessage('상품 정보 획득.', 'success'); 과잉메시지라서 
 
 			// navigate('/product/'+id) 현재페이지 url이 바뀔 필요없다.
 
 		}catch(e){
-			console.log(e.message)
-			set({error: e.message})
-			uiStore.getState().showToastMessage(e.message, 'error');
+			console.log('e.error:', e.error)
+			set({error: e.error})
+			uiStore.getState().showToastMessage(e.error, 'error');
 		}
 	}
 }))

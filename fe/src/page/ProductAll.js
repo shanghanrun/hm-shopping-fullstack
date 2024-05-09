@@ -11,18 +11,16 @@ import uiStore from '../store/uiStore'
 const ProductAll = () => {
   const {productList, getProductList} = productStore()
   const {user} = userStore()
-  const {getCartList} = cartStore()
+  const {getCart, cartCount} = cartStore()
   const navigate = useNavigate()
   const error =false
-  // 처음 로딩하면 상품리스트 불러오기
-  // useEffect(()=>{
-  //   getProductList()
-  // },[])
+  // productList를 구독하고 있으면 된다.
+
   useEffect(()=>{
-    // if(user) getCartList(user._id)
-    //여기서 cartStore의 cartList를 업데이트하면,
+    if(user) getCart()
+    //여기서 cartStore의 cart를 업데이트하면,
     // Navbar에서 cartList를 구독하고 있으므로,업데이트가 된다.
-  },[])
+  },[cartCount])
  
   return (
     <Container>

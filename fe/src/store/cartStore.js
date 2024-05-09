@@ -6,6 +6,7 @@ const cartStore =create((set,state)=>({
 	error:'',
 	cart:{},
 	cartCount:0,
+	zeroCartCount:()=>set({cartCount:0}),
 	addToCart: async({id,size}) => {
 		try{
 			const resp = await api.post('/cart',{productId:id,size:size})
@@ -19,9 +20,10 @@ const cartStore =create((set,state)=>({
 				cartCount: resp.data.cartItemQty
 			})
 		}catch(e){
-			console.log(e.message)
-			set({error: e.message})
-			uiStore.getState().showToastMessage(e.message, 'error');
+			console.log('에러객체:', e)
+			console.log('e.error:', e.error)
+			set({error: e.error})
+			uiStore.getState().showToastMessage(e.error, 'error'); 
 		}
 	},
 	getCart:async()=>{
@@ -37,24 +39,39 @@ const cartStore =create((set,state)=>({
 				cartCount: resp.data.cartItemQty
 			})
 		}catch(e){
-			console.log(e.message)
-			set({error: e.message})
-			uiStore.getState().showToastMessage(e.message, 'error');
+			console.log('에러객체:', e)
+			console.log('e.error:', e.error)
+			set({error: e.error})
+			// uiStore.getState().showToastMessage(e.error, 'error');  로그인시에 불필요한 에러메시지 안나오도록
 		}
 	},
 	
-	deleteCartItem:async(productId)=>{
+	deleteCartItem:async(productId,size)=>{
 		try{
-			const resp = await api.delete('/cart/'+productId)
+			const resp = await api.post('/cart/'+productId,{size:size})
+			if(resp.status !==200) throw new Error(resp.error)
+			set({
+				cart: resp.data.data,
+				cartCount: resp.data.cartItemQty
+			})
 		}catch(e){
-
+			console.log('e.error:', e.error)
+			set({error: e.error})
+			uiStore.getState().showToastMessage(e.error, 'error');
 		}
 	},
-	updateQty:async(productId, qty)=>{
+	updateQty:async(productId,size, qty)=>{
 		try{
-			const resp = await api.put('/cart/'+productId, {qty})
+			const resp = await api.put('/cart/'+productId, {size:size, qty:qty})
+			if(resp.status !==200) throw new Error(resp.error)
+			console.log('업데이트되어 온 Cart데이터:', resp.data.data)
+			set({
+				cart: resp.data.data
+			})
 		}catch(e){
-
+			console.log('e.error:', e.error)
+			set({error: e.error})
+			uiStore.getState().showToastMessage(e.error, 'error');
 		}
 	},
 	getCartQty:async()=>set(),

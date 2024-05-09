@@ -18,7 +18,7 @@ const Navbar = ({ user }) => {
   let [width, setWidth] = useState(0);
   let navigate = useNavigate();
   const {getProductList} =productStore()
-  const {getCartList, cartList, emptyStoreCartList} = cartStore()
+  const {cartCount, cartList, emptyStoreCartList} = cartStore()
  
 	const {logout} = userStore()
   const [query, setQuery] = useSearchParams()
@@ -138,7 +138,7 @@ const Navbar = ({ user }) => {
               <FontAwesomeIcon icon={faShoppingBag} />
               {!isMobile && (
                 <span style={{ cursor: "pointer" }}>{`쇼핑백(${
-                   0
+                   cartCount || 0
                 })`}</span>
               )}
             </div>

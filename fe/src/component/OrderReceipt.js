@@ -1,23 +1,31 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import { currencyFormat } from "../utils/number";
+import cartStore from '../store/cartStore'
 
-const OrderReceipt = () => {
+const OrderReceipt = ({items}) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [total, setTotal] = useState(0);
+
+  useEffect(()=>{
+    const newTotal = items.reduce((sum, item) => sum + (item.productId.price * item.qty), 0);
+    setTotal(newTotal);
+  },[items])
 
   return (
     <div className="receipt-container">
       <h3 className="receipt-title">주문 내역</h3>
       <ul className="receipt-list">
         <li>
-          <div className="display-flex space-between">
-            <div>아이템이름</div>
-
-            <div>₩ 45,000</div>
-          </div>
+          {items.map((item)=>(
+            <div key={item._id} className="display-flex space-between">
+              <div>{item.productId.name}</div>
+              <div>₩ {currencyFormat(item.productId.price*item.qty)}</div>
+            </div>
+          ))}
         </li>
       </ul>
       <div className="display-flex space-between receipt-title">
@@ -25,7 +33,7 @@ const OrderReceipt = () => {
           <strong>Total:</strong>
         </div>
         <div>
-          <strong>₩ 최종가격</strong>
+          <strong>₩ {currencyFormat(total)}</strong>
         </div>
       </div>
       {location.pathname.includes("/cart") && (

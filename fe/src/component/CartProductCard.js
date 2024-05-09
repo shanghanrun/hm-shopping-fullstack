@@ -2,53 +2,56 @@ import React, {useState} from "react";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Row, Col, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { useDispatch } from "react-redux";
-// import { cartActions } from "../action/cartAction";
 import { currencyFormat } from "../utils/number";
+import cartStore from '../store/cartStore'
 
 const CartProductCard = ({ item }) => {
-  // const [total, setTotal] = useState(item.price)
-  const [quantity, setQuantity] = useState(1)
-  // const dispatch = useDispatch();
+   const {deleteCartItem, updateQty} = cartStore() 
+  // const [qty, setQty] = useState(1) //개별적 qty
+  // const [total, setTotal] = useState(item.productId.price)
+ 
 
-  const handleQtyChange = () => {
+  const handleQtyChange = (event) => {
     //아이템 수량을 수정한다
+    // setQty(event.target.value)
+    updateQty(item.productId._id, item.size, event.target.value)
+    // setTotal(item.productId.price *event.target.value)
 
   };
 
-  const deleteCart = (id) => {
-    //아이템을 지운다
+  const deleteCart = () => {
+    deleteCartItem(item.productId._id, item.size)
   };
 
   return (
     <div className="product-card-cart">
       <Row>
         <Col md={2} xs={12}>
-          <img src="https://res.cloudinary.com/dscla3iqu/image/upload/v1714914629/fvq7uu5qriukv3mde5zb.webp" width={112} alt='' />
+          <img src={item.productId.image} width={112} alt='' />
         </Col>
         <Col md={10} xs={12}>
           <div className="display-flex space-between">
-            <h3>하드코딩 상품명</h3>
+            <h3>{item.productId.name}</h3>
             <button className="trash-button">
               <FontAwesomeIcon
                 icon={faTrash}
                 width={24}
-                onClick={() => deleteCart("hard_code")}
+                onClick={() => deleteCart()}
               />
             </button>
           </div>
 
           <div>
-            <strong>₩ 7,000</strong>
+            <strong>₩ {currencyFormat(item.productId.price)}</strong>
           </div>
-          <div>Size: xl</div>
-          <div>Total: ₩ 7,000</div>
+          <div>Size: {item.size}</div>
+          <div>Total: ₩ {currencyFormat(item.productId.price*item.qty)}</div>
           <div>
             Quantity:
             <Form.Select
-              onChange={(event) => handleQtyChange()}
+              onChange={(event) => handleQtyChange(event)}
               required
-              defaultValue={1}
+              defaultValue={item.qty}
               className="qty-dropdown"
             >
               <option value={1}>1</option>

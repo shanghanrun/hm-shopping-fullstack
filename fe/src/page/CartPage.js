@@ -10,37 +10,37 @@ import OrderReceipt from "../component/OrderReceipt";
 import "../style/cart.style.css";
 
 const CartPage = () => {
-  // const {cartList, getCartList} = cartStore()
+  const {cart, getCart, cartCount, productQty} = cartStore()
   const {user} = userStore()
+  console.log('CartPage의 cart :', cart)
 
   useEffect(() => {
-    //카트리스트 불러오기
-    // console.log('cartList :', cartList)
-    // getCartList(user._id)
-  }, []);
+    //카트불러오기
+    getCart()
+  }, [cartCount,productQty]);
 
   return (
     <Container>
       <Row>
         <Col xs={12} md={7}>
-          {/* {(!cartList)? */}
+          {(!cart)?
             (
               <div className="text-align-center empty-bag">
                 <h2>카트가 비어있습니다.</h2>
                 <div>상품을 담아주세요!</div>
               </div>
             )
-            {/* :(
+           :(
               <div>
-                {cartList.map((item)=>(
+                {cart.items.map((item)=>(
                   <CartProductCard key={item._id} item={item}/>
                 ))}
               </div>
-            ) */}
-          {/* } */}
+            ) 
+          }
         </Col>
         <Col xs={12} md={5}>
-          <OrderReceipt />
+          <OrderReceipt items={cart.items} />
         </Col>
       </Row>
     </Container>
