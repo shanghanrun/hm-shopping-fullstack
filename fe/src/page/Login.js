@@ -3,9 +3,10 @@ import { Container, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import userStore from '../store/userStore'
 import "../style/login.style.css";
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
-  const {user, error, setError, loginWithEmail} = userStore()
+  const {user, error, setError, loginWithEmail, loginWithGoogle} = userStore()
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,6 +17,8 @@ const Login = () => {
 	}
   const handleGoogleLogin = async (googleData) => {
     // 구글로 로그인 하기
+    console.log('구글로그인', googleData)
+    loginWithGoogle(googleData.credential)
   };
 
 	// if(user){
@@ -69,7 +72,15 @@ const Login = () => {
 
           <div className="text-align-center mt-2">
             <p>-외부 계정으로 로그인하기-</p>
-            <div className="display-center"></div>
+            <div className="display-center">
+              <GoogleLogin
+                onSuccess={handleGoogleLogin}
+                onError={() => {
+                  console.log('Login Failed');
+                }}
+                useOneTap
+              />;
+            </div>
           </div>
         </Form>
       </Container>

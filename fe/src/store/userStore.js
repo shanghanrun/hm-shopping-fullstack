@@ -49,7 +49,20 @@ const userStore =create((set)=>({
 		set({user:null})
 		cartStore.getState().zeroCartCount()
 	},
-	loginWithGoogle: async ()=>set(),
+	loginWithGoogle: async (token)=>{
+		try{
+			const resp = await api.post('/user/google', {token})
+			if(resp.status !==200) throw new Error(resp.error)
+			const u = await resp.data.user
+			const t = await resp.data.token
+			set({user: u })
+			sessionStorage.setItem('token',t)
+		}catch(e){
+			console.log('e.error:', e.error)
+			set({error: e.error})
+			uiStore.getState().showToastMessage(e.error, 'error');
+		}
+	},
 	registerUser: async({name,email,password}, navigate, showToastMessage)=>{
 		try{
 			const resp = await api.post('/user', {email,password,name})

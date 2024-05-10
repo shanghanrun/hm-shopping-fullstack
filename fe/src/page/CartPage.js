@@ -8,15 +8,16 @@ import OrderReceipt from "../component/OrderReceipt";
 import "../style/cart.style.css";
 
 const CartPage = () => {
-  const {cart, getCart, cartCount, productQty} = cartStore()
+  const {cart, getCart, cartCount, zeroCart} = cartStore()
   const {user} = userStore()
   const navigate = useNavigate()
   console.log('CartPage의 cart :', cart)
 
   useEffect(() => {
+    zeroCart()
     //카트불러오기
     getCart()
-  }, [cartCount,productQty]);
+  }, [cartCount]);
 
   return (
     <Container>

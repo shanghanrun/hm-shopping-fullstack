@@ -7,6 +7,7 @@ const cartStore =create((set,state)=>({
 	cart:{},
 	cartCount:0,
 	zeroCartCount:()=>set({cartCount:0}),
+	zeroCart:()=>set({cart:{}}),
 	addToCart: async({id,size}) => {
 		try{
 			const resp = await api.post('/cart',{productId:id,size:size})
@@ -79,7 +80,7 @@ const cartStore =create((set,state)=>({
 			const resp = await api.delete('/cart')
 			if(resp.status !==200) throw new Error('cart 삭제 실패')
 			set({
-				cart:{},
+				// cart:{},보류
 				cartCount:0
 			})
 			console.log(resp.data.message)

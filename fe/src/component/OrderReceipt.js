@@ -17,9 +17,9 @@ const OrderReceipt = ({items}) => {
   const {setTotalPrice} = orderStore()
   
   useEffect(()=>{
-    if(!items){
-      return(<div>None</div>)
-    }
+    // if(!items){
+    //   return(<div>None</div>)
+    // }
     const newTotal = items.reduce((sum, item) => sum + (item.productId.price * item.qty), 0);
     setTotal(newTotal);
     setTotalPrice(newTotal)
