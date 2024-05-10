@@ -1,13 +1,14 @@
 const mongoose =require('mongoose')
 const User = require('./User')
 const Product = require('./Product')
+const Cart = require('./Cart')
 
 const Schema = mongoose.Schema
 const orderSchema = Schema({
 	userId:{type:mongoose.ObjectId, ref:User},
 	status:{type:String, default:'배송준비중'},
-	shipTo:{type:String, required:true},
-	contact:{type:String, required:true},
+	shipTo:{type:Object, required:true},
+	contact:{type:Object, required:true},
 	totalPrice:{type:Number, default:0},
 	orderNum:{type: String},
 	items:[{
@@ -25,6 +26,11 @@ orderSchema.methods.toJSON =function(){
 	delete obj.updatedAt
 	return obj
 }
+// orderSchema.post("save", async function(){
+// 	const cart = await Cart.findOne({userId: this.userId})
+// 	cart.items =[]
+// 	await cart.save()
+// })
 
 const Order = mongoose.model("Order", orderSchema)
 

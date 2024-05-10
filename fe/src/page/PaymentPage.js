@@ -33,7 +33,7 @@ const PaymentPage = () => {
     city: "",
     zip: "",
   });
-  console.log('shipInfo :', shipInfo)
+  
   //맨처음 페이지 로딩할때는 넘어가고  오더번호를 받으면 성공페이지로 넘어가기
 
   const handleSubmit = (event) => {
@@ -52,13 +52,20 @@ const PaymentPage = () => {
     const {cvc, expiry,name,number} =cardValue
 
     const data ={
-      totalPrice, shipTo:{address,city,zip},
+      totalPrice, 
+      shipTo:{address,city,zip},
       contact:{firstName,lastName,contact},
-      items: [...cartForOrder.items, ]
+      items: cart.items.map((item)=>{
+        return {
+          productId: item.productId._id,
+          price: item.productId.price,
+          qty:item.qty,
+          size: item.size
+        }
+      })
     }
 
-    createOrder(data)
-    navigate('/payment/success')
+    createOrder(data, navigate)
     }  
   };
 

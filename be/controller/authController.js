@@ -24,7 +24,7 @@ authController.authenticate =(req, res, next)=>{
 		})
 		next()
 	} catch(e){
-		return res.status(400).json({status:'fail', message:e.message})
+		return res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -35,7 +35,7 @@ authController.checkAdminPermission =async(req,res,next)=>{
 		if(user.level !== 'admin') throw new Error('no permission')
 		next()
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 module.exports = authController;

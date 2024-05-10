@@ -5,7 +5,6 @@ import uiStore from './uiStore'
 const cartStore =create((set,state)=>({
 	error:'',
 	cart:{},
-	cartForOrder:{},
 	cartCount:0,
 	zeroCartCount:()=>set({cartCount:0}),
 	addToCart: async({id,size}) => {
@@ -46,20 +45,6 @@ const cartStore =create((set,state)=>({
 			// uiStore.getState().showToastMessage(e.error, 'error');  로그인시에 불필요한 에러메시지 안나오도록
 		}
 	},
-	getCartForOrder:async()=>{
-		try{
-			const resp = await api.get('/cart/order')
-			if(resp.status !==200) throw new Error(resp.error)
-			console.log('성공한 cart데이터:', resp.data.data)
-			set({
-				cartForOrder: resp.data.data,
-			})
-		}catch(e){
-			console.log('에러객체:', e)
-			console.log('e.error:', e.error)
-			set({error: e.error})
-		}
-	},
 	
 	deleteCartItem:async(productId,size)=>{
 		try{
@@ -89,8 +74,19 @@ const cartStore =create((set,state)=>({
 			uiStore.getState().showToastMessage(e.error, 'error');
 		}
 	},
-	getCartQty:async()=>set(),
-	emptyStoreCartList:()=>set({cartList: []})
+	emptyCart:async()=>{
+		try{
+			const resp = await api.delete('/cart')
+			if(resp.status !==200) throw new Error('cart 삭제 실패')
+			set({
+				cart:{},
+				cartCount:0
+			})
+			console.log(resp.data.message)
+		}catch(e){
+			console.log(e.message)
+		}	
+	}
 }))
 
 export default cartStore;

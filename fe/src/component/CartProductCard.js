@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Row, Col, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,9 +7,11 @@ import cartStore from '../store/cartStore'
 
 const CartProductCard = ({ item }) => {
    const {deleteCartItem, updateQty} = cartStore() 
-  // const [qty, setQty] = useState(1) //개별적 qty
-  // const [total, setTotal] = useState(item.productId.price)
- 
+   console.log('재고 수량 :', item.productId.stock)
+   console.log('지금 보는 상품 size :', item.size)
+   const stock = {...item.productId.stock}
+   const stockCount = stock[item.size]
+   console.log('내 아이템 재고량:', stockCount)
 
   const handleQtyChange = (event) => {
     //아이템 수량을 수정한다
@@ -54,7 +56,10 @@ const CartProductCard = ({ item }) => {
               defaultValue={item.qty}
               className="qty-dropdown"
             >
-              <option value={1}>1</option>
+              {[...Array(stockCount)].map((_, index) => (
+                <option key={index + 1} value={index + 1}>{index + 1}</option>
+              ))}
+              {/* <option value={1}>1</option>
               <option value={2}>2</option>
               <option value={3}>3</option>
               <option value={4}>4</option>
@@ -63,7 +68,7 @@ const CartProductCard = ({ item }) => {
               <option value={7}>7</option>
               <option value={8}>8</option>
               <option value={9}>9</option>
-              <option value={10}>10</option>
+              <option value={10}>10</option> */}
             </Form.Select>
           </div>
         </Col>

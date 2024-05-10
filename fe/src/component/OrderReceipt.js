@@ -8,14 +8,18 @@ import uiStore from '../store/uiStore'
 import orderStore from '../store/orderStore'
 
 const OrderReceipt = ({items}) => {
+  
   const {showToastMessage} = uiStore()
-  const {getCartForOrder} = cartStore()
+  const {getCart} = cartStore()
   const location = useLocation();
   const navigate = useNavigate();
   const [total, setTotal] = useState(0);
   const {setTotalPrice} = orderStore()
-
+  
   useEffect(()=>{
+    if(!items){
+      return(<div>None</div>)
+    }
     const newTotal = items.reduce((sum, item) => sum + (item.productId.price * item.qty), 0);
     setTotal(newTotal);
     setTotalPrice(newTotal)
@@ -53,7 +57,7 @@ const OrderReceipt = ({items}) => {
                 navigate('/')
               }, 3000);
             } else{
-              await getCartForOrder()
+              await getCart()
               navigate("/payment")}
             }}
         >

@@ -12,7 +12,7 @@ productController.createProduct = async(req, res)=>{
 		
 		return res.status(200).json({status:'ok', data:newProduct})
 	}catch(e){
-		return res.status(400).json({status:'fail', message:e.message})
+		return res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -39,7 +39,7 @@ productController.getAllProducts=async(req, res)=>{
 		res.status(200).json(response)
 		console.log('찾은 productList:', productList)
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 productController.getProductById = async(req,res)=>{
@@ -50,7 +50,7 @@ productController.getProductById = async(req,res)=>{
 			res.status(200).json({status:'ok', data:foundProduct})
 		}
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -66,7 +66,7 @@ productController.updateProduct =async(req,res)=>{
 		if(!updatedProduct) throw new Error("item doesn't exist")
 		res.status(200).json({status:'ok', data: updatedProduct})
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 
@@ -80,7 +80,7 @@ productController.deleteProduct =async(req, res)=>{
     if (!product) throw new Error("No item found");
     res.status(200).json({ status: "success", message:'A item was deleted successfully' });
   } catch (e) {
-    res.status(400).json({ status: "fail", message: e.message });
+    res.status(400).json({ status: "fail", error: e.message });
   }
 };
 // productController.deleteProduct = async(req,res)=>{
@@ -106,8 +106,39 @@ productController.getProductById = async(req,res)=>{
 			throw new Error("Item doesn't exist");
 		}
 	}catch(e){
-		res.status(400).json({status:'fail', message:e.message})
+		res.status(400).json({status:'fail', error:e.message})
 	}
 }
+productController.checkStock=async(item)=>{
+	// 사려는 아이템 재고 정보 들고오기
+	const product = await Product.findById(item.productId)
+	// 사려는 아이템 qty, 재고 비교
+	// 재고가 불충불하면 불충분 메시지와 함께 데이터 반환
+	// 충분하다면, 재고에서 -qty. 성공
+	if(product.stock[item.size] < item.qty){
+		return {isVerify:false, message: `${product.name}의 ${item.size} 재고가 부족합니다. \n현재 ${product.stock[item.size]}개 재고가 있습니다.`}
+	}
+	const newStock = {...product.stock} 
+	// 모양  { s:5, m:2 }  
+	newStock[item.size] -= item.qty
+	product.stock = newStock 
+	await product.save()
+	return {isVerify: true}
+}
+
+productController.checkItemsStock= async (items)=>{
+	const insufficientStockItems =[]
+	await Promise.all(
+		items.map(async(item)=>{
+			const stockCheck = await productController.checkStock(item)
+			if(!stockCheck.isVerify){
+				insufficientStockItems.push({item, message:stockCheck.message})
+			}
+			return
+		})
+	)
+	return insufficientStockItems;
+}
+
 
 module.exports = productController;

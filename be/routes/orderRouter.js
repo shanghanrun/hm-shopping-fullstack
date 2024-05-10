@@ -4,6 +4,6 @@ const orderController =require('../controller/orderController')
 const authController = require('../controller/authController')
 
 router.post('/', authController.authenticate, orderController.createOrder)
-router.get('/', orderController.getOrder)
+router.get('/', authController.authenticate, orderController.getOrder)
 
 module.exports =router

@@ -5,8 +5,9 @@ const authController =require('../controller/authController')
 
 router.post('/', authController.authenticate, cartController.createCartItem)
 router.get('/', authController.authenticate, cartController.getCart)
-router.get('/order', authController.authenticate, cartController.getCartForOrder)
+router.delete('/', authController.authenticate, cartController.emptyCart)
 router.post('/:id', authController.authenticate, cartController.deleteCartItem)
 router.put('/:id', authController.authenticate, cartController.updateItemQty)
+
 
 module.exports =router

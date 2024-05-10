@@ -18,7 +18,7 @@ const Navbar = ({ user }) => {
   let [width, setWidth] = useState(0);
   let navigate = useNavigate();
   const {getProductList} =productStore()
-  const {cartCount, cartList, emptyStoreCartList} = cartStore()
+  const {cartCount} = cartStore()
  
 	const {logout} = userStore()
   const [query, setQuery] = useSearchParams()
@@ -59,7 +59,6 @@ const Navbar = ({ user }) => {
   const getLogout = () => {
     navigate('/')
     logout()
-    emptyStoreCartList()
   };
 
   useEffect(()=>{
