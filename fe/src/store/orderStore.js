@@ -10,7 +10,9 @@ const orderStore =create((set)=>({
 	orderNum:'임시123',
 	orderList:[],
 	totalPageNum:1,
-	itemsInfo:[],
+	itemsList:[],
+	nameList:[],
+	imageList:[],
 	setTotalPrice:(val)=>set({totalPrice: val}),
 	setShip:(val)=>set({ship: val}),
 	setPayment:(val)=>set({payment: val}),
@@ -39,11 +41,15 @@ const orderStore =create((set)=>({
 			if(resp.status !==200) throw new Error(resp.error)
 			console.log('order목록:', resp.data.data)
 			console.log('page 정보:', resp.data.totalPageNum)
-			console.log('itemsInfo :', resp.data.itemsInfo)
+			console.log('itemsList :', resp.data.itemsList)
+			console.log('nameList :', resp.data.nameList)
+			console.log('imageList :', resp.data.imageList)
 			set({
 				orderList: resp.data.data,
 				totalPageNum: resp.data.totalPageNum,
-				itemsInfo: resp.data.itemsInfo
+				itemsList: resp.data.itemsList,
+				nameList: resp.data.nameList,
+				imageList: resp.data.imageList
 			})	
 		}catch(e){
 			console.log('e.error:', e.error)

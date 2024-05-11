@@ -7,7 +7,7 @@ import "../style/orderStatus.style.css";
 import orderStore from '../store/orderStore'
 
 const MyPage = () => {
-  const {orderList, getOrderList} = orderStore()
+  const {orderList, itemsInfo, getOrderList} = orderStore()
 
   // 오더리스트가 없다면? 주문한 상품이 없습니다 메세지 보여주기
   useEffect(()=>{
@@ -27,11 +27,7 @@ const MyPage = () => {
     <Container className="status-card-container">
       {
         orderList.map((order, i)=>(
-          <div key={i}>
-            {order.items.map((item, j)=>(
-              <OrderStatusCard key={j} item={item} orderNum={order.orderNum} date={order.updatedAt}/>
-            ))}
-          </div>
+              <OrderStatusCard key={i} order={order} />
         ))
       }
     </Container>

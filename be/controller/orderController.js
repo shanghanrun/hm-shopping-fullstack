@@ -93,26 +93,86 @@ orderController.getOrderList=async(req, res)=>{
 	try{
 		const userId = req.userId
 		const orderList = await Order.find({userId})
-		const orderList2 = await Order.find({userId})
+		// console.log("orderList :", orderList)
 		
 
 		const itemsList = orderList.map((order)=>{
 			return order.items
 		})
-		console.log('itemsList : ', itemsList)
+		// console.log('itemsList : ', itemsList)
 		const itemsInfo = summarizeItems(itemsList);
-		console.log('itemsInfo :', itemsInfo);
+		// console.log('itemsInfo :', itemsInfo);
 
 		const newItemsInfo = await fetchProducts(itemsInfo);
 		console.log('newItemsInfo: ', newItemsInfo);
 
 		// newItemsInfo[0].productList.forEach((item)=> console.log(item.name))  이렇게 꺼낼 수 있다.
+		//첫번째 상품이름, 이미지를 얻어내야 된다.
+		// 이것을 OrderList = [ {}, {} ] 안의 객체에
+		// { firstItemName, firstItemImage,   }로 추가해준다.
+		const itemNames =[]
+		const itemImages =[]
+		const itemCountList=[]
+		console.log('시작')
+		newItemsInfo.forEach((item)=>{
+			itemCountList.push(item.count)
+			item.productList.forEach((product)=>{
+				itemNames.push(product.name);
+				itemImages.push(product.image)
+			})
+		})
+		console.log('itemNames :', itemNames)
+		console.log('itemImages :', itemImages)
+		console.log('itemCountList:', itemCountList)
+
+		// 결과를 담을 배열
+		const nameList =[]
+		const imageList = [];
+
+		// 각 이미지를 itemCountList에 따라 그룹화하여 groupedImages에 추가
+		let currentIndex = 0;
+		itemCountList.forEach(count => {
+			const imageGroup = itemImages.slice(currentIndex, currentIndex + count);
+			const nameGroup = itemNames.slice(currentIndex, currentIndex + count);
+			imageList.push(imageGroup);
+			nameList.push(nameGroup);
+			currentIndex += count;
+		});
+
+		console.log('imageList:', imageList);
+		console.log('nameList:', nameList);
 
 
 
-		const totalItemNum = await Order.find({userId}).count()
+		// orderList 배열을 순회하면서 itemCount 필드를 추가
+		const jsonString = JSON.stringify(orderList);
+
+		// JSON.parse()를 사용하여 문자열을 객체로 변환
+		const orderList2= JSON.parse(jsonString);
+		const orderList3 = orderList2.map((order, i) => {
+			const itemCount = itemCountList[i];
+			const firstImage = imageList[i][0]
+			const firstName = nameList[i][0]
+		    return {  //  새 객체를 만듬
+				...order, // 기존의 주문 객체의 모든 속성을 복사
+				itemCount, // itemCount 필드 추가
+				firstImage,
+				firstName
+			};
+		});
+
+		console.log('orderList3[0] :',orderList3[0]);
+
+
+
+		// const totalItemNum = await Order.find({userId}).count()     count deprecated
+		const totalItemNum = await Order.find({userId}).countDocuments()
+		console.log('totalITemNum:', totalItemNum)
+		console.log('orderList.length:', orderList.length)
 		const totalPages = Math.ceil(totalItemNum / PAGE_SIZE)
-		res.status(200).json({status:'success', data: orderList, totalPageNum:totalPages, itemsInfo:newItemsInfo })
+		console.log('totalPages :', totalPages)
+		res.status(200).json({status:'success', 
+			data: orderList3, totalPageNum:totalPages, itemsList:newItemsInfo, nameList:nameList, imageList:imageList })
 	}catch(e){
 		res.status(400).json({status:'fail', error:e.message})
 	}
