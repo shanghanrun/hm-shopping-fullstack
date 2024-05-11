@@ -31,12 +31,14 @@ productController.getAllProducts=async(req, res)=>{
 			//전체페이지(총페이지) = 전체 데이터 /PAGE_SIZE
 			const totalItemNum = await Product.find(condition).count()
 			const totalPages = Math.ceil(totalItemNum / PAGE_SIZE)
-			response.totalPageNum = totalPages
+			response.totalPageNum = totalPages 
 		}
 
 		const productList = await query.exec() 
 		response.data = productList
-		res.status(200).json(response)
+		res.status(200).json(response)   
+		// response객체로 들어가면 data: productList, totalPageNum:totalPages 가 되고
+		// 프론트앤드에서는 resp.data.data, resp.data.totalPageNum 으로 받는다. 
 		console.log('찾은 productList:', productList)
 	}catch(e){
 		res.status(400).json({status:'fail', error:e.message})

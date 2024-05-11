@@ -9,6 +9,8 @@ const orderStore =create((set)=>({
 	payment:{},
 	orderNum:'임시123',
 	orderList:[],
+	totalPageNum:1,
+	itemsInfo:[],
 	setTotalPrice:(val)=>set({totalPrice: val}),
 	setShip:(val)=>set({ship: val}),
 	setPayment:(val)=>set({payment: val}),
@@ -31,7 +33,23 @@ const orderStore =create((set)=>({
 			uiStore.getState().showToastMessage(e.error, 'error'); 
 		}
 	},
-	getOrder:async()=>{},
+	getOrderList:async()=>{
+		try{
+			const resp = await api.get('/order')
+			if(resp.status !==200) throw new Error(resp.error)
+			console.log('order목록:', resp.data.data)
+			console.log('page 정보:', resp.data.totalPageNum)
+			console.log('itemsInfo :', resp.data.itemsInfo)
+			set({
+				orderList: resp.data.data,
+				totalPageNum: resp.data.totalPageNum,
+				itemsInfo: resp.data.itemsInfo
+			})	
+		}catch(e){
+			console.log('e.error:', e.error)
+			set({error: e.error})
+		}
+	},
 	updateOrder:async()=>{}
 }))
 
