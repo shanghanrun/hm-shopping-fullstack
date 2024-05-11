@@ -39,6 +39,7 @@ orderController.createOrder = async(req, res)=>{
 
 orderController.getOrderList=async(req, res)=>{
 	const PAGE_SIZE =5
+
 	function summarizeItems(itemsList) {
 		const summary = [];
 
@@ -92,6 +93,9 @@ orderController.getOrderList=async(req, res)=>{
 	try{
 		const userId = req.userId
 		const orderList = await Order.find({userId})
+		const orderList2 = await Order.find({userId})
+		
+
 		const itemsList = orderList.map((order)=>{
 			return order.items
 		})
