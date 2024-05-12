@@ -8,23 +8,23 @@ const OrderTable = ({ header, data, openEditForm }) => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            {header.map((title) => (
-              <th>{title}</th>
+            {header.map((title,i) => (
+              <th key={i}>{title}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {data.length > 0 ? (
             data.map((item, index) => (
-              <tr onClick={() => openEditForm(item)}>
+              <tr key={index} onClick={() => openEditForm(item)}>
                 <th>{index}</th>
                 <th>{item.orderNum}</th>
-                <th>{item.createdAt.slice(0, 10)}</th>
-                <th>{item.userId.email}</th>
+                <th>{item.updatedAt.slice(0, 10)}</th>
+                <th>{item.email}</th>
                 {item.items.length > 0 ? (
                   <th>
-                    {item.items[0].productId.name}
-                    {item.items.length > 1 && `외 ${item.items.length - 1}개`}
+                    {item.items[0].name}
+                    {item.items.length > 1 && ` 외 ${item.items.length - 1}개`}
                   </th>
                 ) : (
                   <th></th>

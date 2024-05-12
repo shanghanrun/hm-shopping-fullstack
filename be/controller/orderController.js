@@ -1,6 +1,7 @@
 const Order = require('../model/Order')
 const Order2 = require('../model/Order2')
 const Product = require('../model/Product')
+const User = require('../model/User')
 const { randomStringGenerator } = require('../utils/randomStringGenerator')
 const productController = require('./productController')
 const cartController = require('./cartController')
@@ -21,8 +22,11 @@ orderController.createOrder = async(req, res)=>{
 			throw new Error(errorMessage)
 		}
 		const orderNum = randomStringGenerator()
+		const user = await User.findOne({userId})
+		const email = user.email
+
 		const newOrder = new Order({
-			userId, shipTo, contact,totalPrice, items,
+			userId, email, shipTo, contact,totalPrice, items,
 			orderNum: orderNum,
 		})
 		await newOrder.save()
@@ -51,8 +55,12 @@ orderController.createOrder2 = async(req, res)=>{
 			throw new Error(errorMessage)
 		}
 		const orderNum = randomStringGenerator()
+
+		const user = await User.findById(userId)
+		const email = user.email
+
 		const newOrder = new Order2({
-			userId, shipTo, contact,totalPrice, items,
+			userId, email, shipTo, contact,totalPrice, items,
 			orderNum: orderNum,
 		})
 		await newOrder.save()
@@ -226,6 +234,26 @@ orderController.getOrderList2=async(req, res)=>{
 		res.status(400).json({status:'fail', error:e.message})
 	}
 }
+
+orderController.updateOrder2 = async (req, res) => {
+    try {
+        const { orderId, newStatus } = req.body;
+        const updatedOrder = await Order2.findOneAndUpdate(
+            { _id: orderId }, // 검색 조건
+            { status: newStatus }, // 수정 내용
+            { new: true } // 수정된 문서를 반환하도록 설정
+        );
+		console.log('업데이트된 order :', updatedOrder)
+        if (!updatedOrder) {
+            throw new Error("주문을 찾을 수 없습니다.")
+        }
+        // 수정된 주문을 클라이언트로 응답
+        res.status(200).json({status:'ok', updatedOrder: updatedOrder});
+    } catch (error) {
+        console.error("주문 업데이트 오류:", error);
+        res.status(500).json({ status:'fail', error: "주문을 업데이트하는 동안 오류가 발생했습니다." });
+    }
+};
 
 
 module.exports = orderController;

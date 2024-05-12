@@ -6,6 +6,7 @@ const Cart = require('./Cart')
 const Schema = mongoose.Schema
 const order2Schema = Schema({
 	userId:{type:mongoose.ObjectId, ref:User},
+	email:{type:String},
 	status:{type:String, default:'배송준비중'},
 	shipTo:{type:Object, required:true},
 	contact:{type:Object, required:true},

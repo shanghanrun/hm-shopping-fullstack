@@ -1,22 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Modal, Button, Col, Table } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 
 import "../style/adminOrder.style.css";
 import { ORDER_STATUS } from "../constants/order.constants";
-import { orderActions } from "../action/orderAction";
 import { currencyFormat } from "../utils/number";
+import orderStore from '../store/orderStore'
 
 const OrderDetailDialog = ({ open, handleClose }) => {
-  const selectedOrder = useSelector((state) => state.order.selectedOrder);
+  const {selectedOrder, updateOrder2} = orderStore()
+  console.log('selectedOrder :', selectedOrder)
   const [orderStatus, setOrderStatus] = useState(selectedOrder.status);
-  const dispatch = useDispatch();
 
   const handleStatusChange = (event) => {
     setOrderStatus(event.target.value);
   };
-  const submitStatus = () => {
-    dispatch(orderActions.updateOrder(selectedOrder._id, orderStatus));
+  const submitStatus = (e) => {
+    e.preventDefault(); // 이걸 해야 된다!!
+    
+    updateOrder2(selectedOrder._id, orderStatus);
     handleClose();
   };
 
@@ -30,15 +31,16 @@ const OrderDetailDialog = ({ open, handleClose }) => {
       </Modal.Header>
       <Modal.Body>
         <p>주문번호: {selectedOrder.orderNum}</p>
-        <p>주문날짜: {selectedOrder.createdAt.slice(0, 10)}</p>
-        <p>이메일: {selectedOrder.userId.email}</p>
+        {/* <p>주문날짜: {selectedOrder.updatedAt.slice(0, 10)}</p> */}
+        <p>주문날짜: {selectedOrder.updatedAt ? selectedOrder.updatedAt.slice(0, 10) : '날짜 없음'}</p>
+        <p>이메일: {selectedOrder.email}</p>
         <p>
           주소:{selectedOrder.shipTo.address + " " + selectedOrder.shipTo.city}
         </p>
         <p>
           연락처:
           {`${
-            selectedOrder.contact.firstName + selectedOrder.contact.lastName
+            selectedOrder.contact.firstName +" "+ selectedOrder.contact.lastName
           } ${selectedOrder.contact.contact}`}
         </p>
         <p>주문내역</p>

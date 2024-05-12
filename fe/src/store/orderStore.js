@@ -3,11 +3,12 @@ import api from '../utils/api'
 import uiStore from './uiStore'
 import cartStore from './cartStore'
 
-const orderStore =create((set)=>({
+const orderStore =create((set, state)=>({
 	totalPrice:0,
 	ship:{},
 	payment:{},
 	orderNum:'임시123',
+	selectedOrder:{},
 	orderList:[],
 	totalPageNum:1,
 	itemsList:[],
@@ -16,6 +17,23 @@ const orderStore =create((set)=>({
 	setTotalPrice:(val)=>set({totalPrice: val}),
 	setShip:(val)=>set({ship: val}),
 	setPayment:(val)=>set({payment: val}),
+	setSelectedOrder:(orderValue)=> set({selectedOrder: orderValue}),
+	updateOrder2: async(orderId, newStatus) => {
+		try{
+			const resp = await api.put('/order/2', {orderId, newStatus})
+			if(resp.status !==200){
+				throw new Error(resp.error)
+			}
+			console.log('업데이트되어 프론트로 온 order:', resp.data.updatedOrder)
+			set({selectedOrder: resp.data.updatedOrder})
+			// awa)it state.getOrderList2(); //orderList 갱신하려 하지만..안된다.
+
+		}catch(e){
+			console.log(e.error)
+			uiStore.getState().showToastMessage(e.error, 'error');
+		}
+	},
+
 	addOrder:(val)=>set({orderList:{...val}}),
 	createOrder:async(data, navigate)=>{
 		try{
@@ -88,8 +106,7 @@ const orderStore =create((set)=>({
 			console.log('e.error:', e.error)
 			set({error: e.error})
 		}
-	},
-	updateOrder:async()=>{}
+	}
 }))
 
 export default orderStore;

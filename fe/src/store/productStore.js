@@ -65,6 +65,7 @@ const productStore =create((set,state)=>({
 			const resp = await api.put('/product/'+formData._id, formData)
 			if(resp.status !==200) throw new Error(resp.error)
 			console.log('성공한 데이터:', resp.data.data)
+			set({selectedProduct: resp.data.data})
 			uiStore.getState().showToastMessage('상품수정을 완료했습니다.', 'success');
 
 			// set((state)=>({productList: [...state.productList, resp.data.data]})) 이건 안된다.
