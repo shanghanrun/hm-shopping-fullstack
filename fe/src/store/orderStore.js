@@ -74,6 +74,21 @@ const orderStore =create((set)=>({
 			set({error: e.error})
 		}
 	},
+	getOrderList2:async()=>{
+		try{
+			const resp = await api.get('/order/2')
+			if(resp.status !==200) throw new Error(resp.error)
+			console.log('order목록:', resp.data.orderList)
+			console.log('page 정보:', resp.data.totalPageNum)
+			set({
+				orderList: resp.data.orderList,
+				totalPageNum: resp.data.totalPageNum
+			})	
+		}catch(e){
+			console.log('e.error:', e.error)
+			set({error: e.error})
+		}
+	},
 	updateOrder:async()=>{}
 }))
 

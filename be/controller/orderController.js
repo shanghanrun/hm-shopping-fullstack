@@ -1,4 +1,5 @@
 const Order = require('../model/Order')
+const Order2 = require('../model/Order2')
 const Product = require('../model/Product')
 const { randomStringGenerator } = require('../utils/randomStringGenerator')
 const productController = require('./productController')
@@ -26,7 +27,8 @@ orderController.createOrder = async(req, res)=>{
 		})
 		await newOrder.save()
 		//save후에 cart를 비워준다.
-		// cartController.emptyCart() 
+		//await cartController.emptyCart() 그런데 바로 비우면 프론트엔드에서 getCart()하고, 화면구성할 때 에러가 나올 수 있다. 
+		// cart비우는 것은, 프론트엔드에서 필요할 때 요청하게 만든다.
 		// // await로 기다리게 하지 않고 비동기로 작업하게 놔둘수도 있지만, 
 		// //제대로 비워줘야 화면에 반영되므로 await을 사용한다.
 
@@ -49,13 +51,15 @@ orderController.createOrder2 = async(req, res)=>{
 			throw new Error(errorMessage)
 		}
 		const orderNum = randomStringGenerator()
-		const newOrder = new Order({
+		const newOrder = new Order2({
 			userId, shipTo, contact,totalPrice, items,
 			orderNum: orderNum,
 		})
 		await newOrder.save()
+		console.log('Order2 생성됨')
 		//save후에 cart를 비워준다.
-		// cartController.emptyCart() 
+		//await cartController.emptyCart() 그런데 바로 비우면 프론트엔드에서 getCart()하고, 화면구성할 때 에러가 나올 수 있다. 
+		// cart비우는 것은, 프론트엔드에서 필요할 때 요청하게 만든다.
 		// // await로 기다리게 하지 않고 비동기로 작업하게 놔둘수도 있지만, 
 		// //제대로 비워줘야 화면에 반영되므로 await을 사용한다.
 
@@ -202,6 +206,22 @@ orderController.getOrderList=async(req, res)=>{
 		console.log('totalPages :', totalPages)
 		res.status(200).json({status:'success', 
 			data: orderList3, totalPageNum:totalPages, itemsList:newItemsInfo, nameList:nameList, imageList:imageList })
+	}catch(e){
+		res.status(400).json({status:'fail', error:e.message})
+	}
+}
+orderController.getOrderList2=async(req, res)=>{
+	const PAGE_SIZE =5
+
+	try{
+		const userId = req.userId
+		const orderList = await Order2.find({userId})	
+
+		const totalItemNum = await Order2.find({userId}).countDocuments()  // 혹은 그냥 totalItemNum = orderList.length
+		const totalPages = Math.ceil(totalItemNum / PAGE_SIZE)
+		console.log('totalPages :', totalPages)
+		res.status(200).json({status:'success', 
+			orderList: orderList, totalPageNum:totalPages })
 	}catch(e){
 		res.status(400).json({status:'fail', error:e.message})
 	}

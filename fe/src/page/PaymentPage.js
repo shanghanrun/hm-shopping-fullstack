@@ -11,7 +11,7 @@ import uiStore from '../store/uiStore'
 import cartStore from '../store/cartStore'
 
 const PaymentPage = () => {
-  const {setShip, setPayment,createOrder} = orderStore()
+  const {setShip, setPayment,createOrder, createOrder2} = orderStore()
   const {cart, cartForOrder} = cartStore()
   const {showToastMessage} = uiStore()
   const {totalPrice} = orderStore()
@@ -45,47 +45,48 @@ const PaymentPage = () => {
       }, 3000);
     } else{
       //오더 생성하가ㅣ
-    setShip(shipInfo)
-    setPayment(cardValue)
+      setShip(shipInfo)
+      setPayment(cardValue)
 
-    const {firstName,lastName,contact,address,city,zip} = shipInfo
-    const {cvc, expiry,name,number} =cardValue
+      const {firstName,lastName,contact,address,city,zip} = shipInfo
+      const {cvc, expiry,name,number} =cardValue
 
-    const data ={
-      totalPrice, 
-      shipTo:{address,city,zip},
-      contact:{firstName,lastName,contact},
-      items: cart.items.map((item)=>{
-        return {
-          productId: item.productId._id,
-          price: item.productId.price,
-          qty:item.qty,
-          size: item.size
-        }
-      })
-    }
+      // 기존의 order 생성방식을 주석처리하고, 몽고디비에서도 제거한다.
+      // const data ={
+      //   totalPrice, 
+      //   shipTo:{address,city,zip},
+      //   contact:{firstName,lastName,contact},
+      //   items: cart.items.map((item)=>{
+      //     return {
+      //       productId: item.productId._id,
+      //       price: item.productId.price,
+      //       qty:item.qty,
+      //       size: item.size
+      //     }
+      //   })
+      // }
 
-    createOrder(data, navigate)
-    }
-    // 잠시 주석처리한다. 에러상황에 대비해서
-    // const data2 ={
-    //   totalPrice, 
-    //   shipTo:{address,city,zip},
-    //   contact:{firstName,lastName,contact},
-    //   items: cart.items.map((item)=>{
-    //     return {
-    //       productId: item.productId._id,
-    //       sku: item.productId.sku,
-    //       name: item.productId.name,
-    //       image: item.productId.image,
-    //       price: item.productId.price,
-    //       qty:item.qty,
-    //       size: item.size
-    //     }
-    //   })
-    // }
+      // createOrder(data, navigate)
+      
+      // 잠시 주석처리한다. 에러상황에 대비해서
+      const data2 ={
+        totalPrice, 
+        shipTo:{address,city,zip},
+        contact:{firstName,lastName,contact},
+        items: cart.items.map((item)=>{
+          return {
+            productId: item.productId._id,
+            sku: item.productId.sku,
+            name: item.productId.name,
+            image: item.productId.image,
+            price: item.productId.price,
+            qty:item.qty,
+            size: item.size
+          }
+        })
+      }
 
-    // createOrder2(data2, navigate)
+      createOrder2(data2, navigate)
     }  
   };
 

@@ -26,7 +26,7 @@ order2Schema.methods.toJSON =function(){
 	const obj = this._doc
 	delete obj.__v
 	delete obj.createdAt
-	delete obj.updatedAt
+	// delete obj.updatedAt   가장 최근에 업데이트된 날짜 필요
 	return obj
 }
 // orderSchema.post("save", async function(){

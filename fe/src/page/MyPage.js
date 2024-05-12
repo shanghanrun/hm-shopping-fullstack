@@ -1,17 +1,19 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect} from "react";
 import {Link} from 'react-router-dom'
 import { Container } from "react-bootstrap";
 import OrderStatusCard from "../component/OrderStatusCard";
+import OrderStatusCardOuter from "../component/OrderStatusCardOuter";
 import "../style/orderStatus.style.css";
 import orderStore from '../store/orderStore'
 
 const MyPage = () => {
-  const {orderList, itemsInfo, getOrderList} = orderStore()
+  const {orderList, itemsInfo, getOrderList, getOrderList2} = orderStore()
 
   // 오더리스트가 없다면? 주문한 상품이 없습니다 메세지 보여주기
   useEffect(()=>{
-    getOrderList()
+    // getOrderList()
+    getOrderList2()
   },[])
   if(orderList.length ===0){
     return(
@@ -27,7 +29,16 @@ const MyPage = () => {
     <Container className="status-card-container">
       {
         orderList.map((order, i)=>(
-              <OrderStatusCard key={i} order={order} />
+          <div key={i}>
+            <OrderStatusCardOuter order={order} />
+            {/* <div>
+              {
+                order.items.map((item,j)=>
+                  <OrderStatusCard key={j} order={order} item={item} />
+                )
+              }
+            </div> */}
+          </div> 
         ))
       }
     </Container>
