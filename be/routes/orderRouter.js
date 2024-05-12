@@ -5,5 +5,7 @@ const authController = require('../controller/authController')
 
 router.post('/', authController.authenticate, orderController.createOrder)
 router.get('/', authController.authenticate, orderController.getOrderList)
+router.post('/2', authController.authenticate, orderController.createOrder2)
+router.get('/2', authController.authenticate, orderController.getOrderList2)
 
 module.exports =router

@@ -66,6 +66,26 @@ const PaymentPage = () => {
     }
 
     createOrder(data, navigate)
+    }
+    // 잠시 주석처리한다. 에러상황에 대비해서
+    // const data2 ={
+    //   totalPrice, 
+    //   shipTo:{address,city,zip},
+    //   contact:{firstName,lastName,contact},
+    //   items: cart.items.map((item)=>{
+    //     return {
+    //       productId: item.productId._id,
+    //       sku: item.productId.sku,
+    //       name: item.productId.name,
+    //       image: item.productId.image,
+    //       price: item.productId.price,
+    //       qty:item.qty,
+    //       size: item.size
+    //     }
+    //   })
+    // }
+
+    // createOrder2(data2, navigate)
     }  
   };
 

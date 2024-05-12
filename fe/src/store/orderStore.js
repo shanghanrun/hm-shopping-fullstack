@@ -35,6 +35,24 @@ const orderStore =create((set)=>({
 			uiStore.getState().showToastMessage(e.error, 'error'); 
 		}
 	},
+	createOrder2:async(data2, navigate)=>{
+		try{
+			const resp = await api.post('/order/2', data2)
+			if(resp.status !==200){
+				throw new Error(resp.error)
+			}
+			console.log('오더넘버:',resp.data.orderNum)
+			set({orderNum: resp.data.orderNum})
+			await cartStore.getState().emptyCart()
+			// console.log('비우기 성공')
+			//성공메시지는 생략하고, 결제성공 페이지로 이동
+			navigate('/payment/success')
+			
+		}catch(e){
+			console.log(e.error)
+			uiStore.getState().showToastMessage(e.error, 'error'); 
+		}
+	},
 	getOrderList:async()=>{
 		try{
 			const resp = await api.get('/order')
