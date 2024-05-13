@@ -275,3 +275,12 @@ body{
   margin-top: 20px;
   margin-right: 20px;
 }
+
+.toast-message{
+  background: rgb(208, 33, 252, 0.5);
+    color: #fff;
+    font-size: 20px;
+    width: 34vw;
+    height: 34vh;
+    padding: 30px 20px;
+}

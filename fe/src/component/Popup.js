@@ -7,16 +7,18 @@ const Popup = ({popupContent}) => {
 
   useEffect(() => {
     if (popupContent) {
-      const { message, data, status } = popupContent;
-      if (message !== "" && status !== "") {
-        toast[status](message, { theme: "colored" });
+      const { message } = popupContent;
+      if (message !== "" ) {
+        toast(message, {
+          className: "toast-message",
+        });
       }
     }
-  }, [toastMessage]);
+  }, [popupContent]);
   return (
     <ToastContainer
-      position="top-right"
-      autoClose={5000}
+      position="bottom-center"
+      autoClose={50000000}
       hideProgressBar={false}
       newestOnTop={false}
       closeOnClick
@@ -29,4 +31,4 @@ const Popup = ({popupContent}) => {
   );
 };
 
-export default ToastMessage;
+export default Popup;

@@ -12,7 +12,7 @@ function CategoryDropdown() {
   function filterByCategory(category){
     console.log('product category: ', category)
 
-    const results = iList.filter(product => product.name.includes(category))
+    const results = iList.filter(product => product.name.includes(category) || product.category.includes(category))
     setProducts(results)
   }
   return (

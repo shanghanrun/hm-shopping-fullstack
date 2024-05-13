@@ -6,11 +6,13 @@ import productStore from '../store/productStore';
 import cartStore from '../store/cartStore'
 import userStore from '../store/userStore'
 import uiStore from '../store/uiStore'
+import Popup from "../component/Popup";
 
 
 const ProductAll = () => {
   const {productList, getProductList} = productStore()
   const {user} = userStore()
+  const {popupContent} = uiStore() 
   const {getCart, cartCount} = cartStore()
   const navigate = useNavigate()
   const error =false
@@ -31,6 +33,7 @@ const ProductAll = () => {
           </Col>
         ))}
       </Row>
+      <Popup popupContent={popupContent}/>
     </Container>
   );
 };

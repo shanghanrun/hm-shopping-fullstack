@@ -10,6 +10,7 @@ import ProductTable from "../component/ProductTable";
 
 const AdminProduct = () => {
   const {productList, getProductList, totalPage, setSelectedProduct, deleteProduct, selectedProduct} = productStore()
+  const {showPopup} = uiStore()
   const navigate = useNavigate();
   const [showDialog, setShowDialog] = useState(false);
 
@@ -82,7 +83,9 @@ const AdminProduct = () => {
   return (
     <div className="locate-center">
       <Container>
-        <div className="mt-2">
+        <div className="mt-2" 
+          style={{display:'flex', gap:'200px'}}
+        >
           <SearchBox
             query={query}
             searchQuery={searchQuery}
@@ -90,6 +93,7 @@ const AdminProduct = () => {
             placeholder="제품 이름으로 검색"
             field="name"
           />
+          <Button variant="success" onClick={showPopup}>show popup</Button>
         </div>
         <Button className="mt-2 mb-2" onClick={handleClickNewItem}>
           Add New Item +

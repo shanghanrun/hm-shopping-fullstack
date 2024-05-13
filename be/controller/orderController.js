@@ -237,9 +237,9 @@ orderController.getOrderList2=async(req, res)=>{
 		const userId =  req.userId
 		console.log('다음 유저의 orderList검색: ', userId)
 
-		const cond ={}  // condition 객체
+		let cond ={}  // condition 객체
 		if (userId.level !== 'admin'){
-			const cond = { userId: userId };
+			cond = { userId: userId };
 		}
 
 		if (orderNum) {
@@ -249,6 +249,7 @@ orderController.getOrderList2=async(req, res)=>{
 		// 	orderNum:{$regex: orderNum, $options:'i'}
 		// 	} 
 		// 	:{}
+		console.log('cond : ', cond)
 		console.log('백엔드 page', page)
 
 		let query = Order2.find(cond)

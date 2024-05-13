@@ -12,18 +12,18 @@ function PriceDropdown() {
   const iList = [...initialProductList]
 
   function filterByPrice(price){
-    console.log('product price: ', price)
-    let pr;
+    let pr1, pr2;
     if (price ==='만원 이하'){
-      pr = 10000
-    } else if(price ==='2만원 이하'){
-      pr = 20000
-    } else if(price ==='3만원 이하'){
-      pr = 30000
-    } else if(price ==='10만원 이하'){
-      pr = 100000
+      pr1= 0 ; pr2=10000
+    } else if(price ==='만원~2만원'){
+      pr1= 10000; pr2 = 20000
+    } else if(price ==='2만원~3만원'){
+      pr1=20000; pr2 = 30000
+    } else if(price ==='3만원 이상'){
+      pr1= 30000; pr2 = 10000000
     }
-    const results = iList.filter(product => product.price <= pr)
+    const results = iList.filter(product => 
+      product.price >= pr1 && product.price <=pr2)
     setProducts(results)
   }
   return (
