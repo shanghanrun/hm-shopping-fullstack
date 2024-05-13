@@ -17,10 +17,10 @@ productController.createProduct = async(req, res)=>{
 }
 
 
-productController.getAllProducts=async(req, res)=>{
+productController.getProductList=async(req, res)=>{
 	try{
 		const {page, name}= req.query  // ?뒤의 쿼리값
-		const condition = name? {name:{$regex:name, $options:'i', isDeleted:false}} : {isDeleted:false}
+		const condition = name? { name:{$regex:name, $options:'i'}, isDeleted:false} : {isDeleted:false}
 		// const condition2 = ....  
 		let query = Product.find(condition) //함수를 만들어둠.
 		// query = Product.find(condition2)
@@ -29,7 +29,7 @@ productController.getAllProducts=async(req, res)=>{
 		if(page){
 			query.skip((page-1)*PAGE_SIZE).limit(PAGE_SIZE)
 			//전체페이지(총페이지) = 전체 데이터 /PAGE_SIZE
-			const totalItemNum = await Product.find(condition).count()
+			const totalItemNum = await Product.find(condition).countDocuments()
 			const totalPages = Math.ceil(totalItemNum / PAGE_SIZE)
 			response.totalPageNum = totalPages 
 		}

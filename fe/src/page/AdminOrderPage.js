@@ -15,7 +15,7 @@ const AdminOrderPage = () => {
   const { orderList, getOrderList2, totalPageNum,setSelectedOrder,selectedOrder } = orderStore()
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
-    ordernum: query.get("ordernum") || "",
+    orderNum: query.get("orderNum") || "",
   });
   const [open, setOpen] = useState(false);
   const tableHeader = [
@@ -30,15 +30,16 @@ const AdminOrderPage = () => {
   ];
 
   useEffect(() => {
-    getOrderList2()
+    getOrderList2(searchQuery)
   }, [query, selectedOrder]);
 
   useEffect(() => {
-    if (searchQuery.ordernum === "") {
-      delete searchQuery.ordernum;
+    if (searchQuery.orderNum === "") {
+      delete searchQuery.orderNum;
     }
     const params = new URLSearchParams(searchQuery);
     const queryString = params.toString();
+    console.log('admin orderPage queryString:', queryString)
 
     navigate("?" + queryString);
   }, [searchQuery]);
@@ -56,15 +57,17 @@ const AdminOrderPage = () => {
     setOpen(false);
   };
 
+
   return (
     <div className="locate-center">
       <Container>
         <div className="mt-2 display-center mb-2">
           <SearchBox
+            query={query}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             placeholder="오더번호"
-            field="ordernum"
+            field="orderNum"
           />
         </div>
 

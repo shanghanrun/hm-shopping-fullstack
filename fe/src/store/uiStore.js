@@ -4,6 +4,10 @@ import {create} from 'zustand'
 const uiStore =create((set)=>({
 	toastMessage:{message:'', status:''},
 	isFullyLoaded:true, 
+	popupContent:{message:'', data:{}, status:''},
+	showPopup:(message, data, status)=>{
+		set({popupContent: {message, data, status}})
+	}, 
 	showToastMessage: (message, status) => {
     set({ toastMessage: { message, status } });
  	},

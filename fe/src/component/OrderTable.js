@@ -3,6 +3,7 @@ import { Table, Badge } from "react-bootstrap";
 import { badgeBg } from "../constants/order.constants";
 import { currencyFormat } from "../utils/number";
 const OrderTable = ({ header, data, openEditForm }) => {
+  console.log('orderTable이 받은 data(orderList)', data)
   return (
     <div className="overflow-x">
       <Table striped bordered hover>
@@ -14,7 +15,7 @@ const OrderTable = ({ header, data, openEditForm }) => {
           </tr>
         </thead>
         <tbody>
-          {data.length > 0 ? (
+          {data && data.length > 0 ? (
             data.map((item, index) => (
               <tr key={index} onClick={() => openEditForm(item)}>
                 <th>{index}</th>

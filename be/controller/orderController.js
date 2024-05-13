@@ -7,6 +7,7 @@ const productController = require('./productController')
 const cartController = require('./cartController')
 
 const orderController={}
+const PAGE_SIZE =5
 
 
 orderController.createOrder = async(req, res)=>{
@@ -79,8 +80,6 @@ orderController.createOrder2 = async(req, res)=>{
 
 
 orderController.getOrderList=async(req, res)=>{
-	const PAGE_SIZE =5
-
 	function summarizeItems(itemsList) {
 		const summary = [];
 
@@ -133,8 +132,18 @@ orderController.getOrderList=async(req, res)=>{
 
 	try{
 		const userId = req.userId
-		const orderList = await Order.find({userId})
-		// console.log("orderList :", orderList)
+		const {page, orderNum} = req.body
+		const cond = orderNum? { orderNum:{$regex:orderNum, $options:'i'}}:{}
+		let query = Order.find(cond)
+		let response = {status: "success"}
+		if(page){
+			query.skip((page-1)*PAGE_SIZE).limit(PAGE_SIZE)
+			const totalItemNum = await Order.find(cond).countDocuments()
+			const totalPages = Math.ceil(totalItemNum /PAGE_SIZE)
+			response.totalPageNum = totalPages
+		}
+		const orderList = await query.exec()
+		response.data = orderList
 		
 
 		const itemsList = orderList.map((order)=>{
@@ -207,29 +216,56 @@ orderController.getOrderList=async(req, res)=>{
 
 
 		// const totalItemNum = await Order.find({userId}).count()     count deprecated
-		const totalItemNum = await Order.find({userId}).countDocuments()
-		console.log('totalITemNum:', totalItemNum)
-		console.log('orderList.length:', orderList.length)
-		const totalPages = Math.ceil(totalItemNum / PAGE_SIZE)
-		console.log('totalPages :', totalPages)
-		res.status(200).json({status:'success', 
-			data: orderList3, totalPageNum:totalPages, itemsList:newItemsInfo, nameList:nameList, imageList:imageList })
+		// const totalItemNum = await Order.find({userId}).countDocuments()
+		// console.log('totalITemNum:', totalItemNum)
+		// console.log('orderList.length:', orderList.length)
+		// const totalPages = Math.ceil(totalItemNum / PAGE_SIZE)
+		// console.log('totalPages :', totalPages)
+
+		response.itemsList = newItemsInfo
+		response.nameList = nameList
+		response.imageList = imageList
+
+		res.status(200).json(response)
 	}catch(e){
 		res.status(400).json({status:'fail', error:e.message})
 	}
 }
 orderController.getOrderList2=async(req, res)=>{
-	const PAGE_SIZE =5
-
 	try{
-		const userId = req.userId
-		const orderList = await Order2.find({userId})	
+		const {page, orderNum} = req.query
+		const userId =  req.userId
+		console.log('다음 유저의 orderList검색: ', userId)
 
-		const totalItemNum = await Order2.find({userId}).countDocuments()  // 혹은 그냥 totalItemNum = orderList.length
-		const totalPages = Math.ceil(totalItemNum / PAGE_SIZE)
-		console.log('totalPages :', totalPages)
-		res.status(200).json({status:'success', 
-			orderList: orderList, totalPageNum:totalPages })
+		const cond ={}  // condition 객체
+		if (userId.level !== 'admin'){
+			const cond = { userId: userId };
+		}
+
+		if (orderNum) {
+			cond.orderNum = { $regex: orderNum, $options: 'i' };
+		}
+		// const cond = orderNum? {
+		// 	orderNum:{$regex: orderNum, $options:'i'}
+		// 	} 
+		// 	:{}
+		console.log('백엔드 page', page)
+
+		let query = Order2.find(cond)
+		let response = {status:'success'}
+
+		if(page){
+			query.skip((page-1)*PAGE_SIZE).limit(PAGE_SIZE)
+			const totalItemNum = await Order2.find(cond).countDocuments()
+			const totalPages = Math.ceil(totalItemNum / PAGE_SIZE)
+			response.totalPageNum = totalPages
+		}
+
+		const orderList = await query.exec()
+		response.orderList = orderList
+		console.log('찾은 orderList', orderList)
+
+		res.status(200).json(response)
 	}catch(e){
 		res.status(400).json({status:'fail', error:e.message})
 	}

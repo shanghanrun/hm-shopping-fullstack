@@ -9,9 +9,23 @@ const productStore =create((set,state)=>({
 	error:'',
 	selectedProduct:null,
 	productList:[],
+	initialProductList:[],
 	totalPage:1,
+	newProductList:[], // 신상 공개용 리스트 
+	emptyNewProductList:()=>set({newProductList:[]}), 
+	setProducts:(results)=>{
+		set({
+			productList: results
+		})
+		// console.log('productList:', state.productList)
+		// 희안하게도 콘솔로 찍으면 undefined
+		// 그래서 여기서 계산못한다.
+		// const results = tempList.filter(product=>product.price <= pr)
+		// console.log('results list: ', results)
+		// set({productList: results})
+	},
 	getProductList:async(searchQuery)=>{
-		if(searchQuery.name === ''){
+		if(searchQuery?.name === ''){
 			delete searchQuery.name;
 		}
 		try{
@@ -21,15 +35,21 @@ const productStore =create((set,state)=>({
 			console.log('page 정보 : ',resp.data.totalPageNum)
 			set({totalPage: resp.data.totalPageNum})
 			const list = resp.data.data
+			console.log('list :', list)
 			// productList와 list가 동일한지를 판별하는 조건 추가
       		// if (JSON.stringify(state.productList) === JSON.stringify(list)) {
 			// 	return;
 			// }
 			// productList와 list가 동일한지를 lodash의 isEqual 함수를 사용하여 판별
-			if (isEqual(state.productList, list)) {
-				return;
-			}
-			set({productList: list})	
+
+
+			//무한 반복을 없애려고 했던 건게... 무의미할수도 있다.
+			// if (isEqual(state.productList, list)) {
+			// 	return;
+			// }
+
+			set({
+				productList: [...list],    	initialProductList:[...list]})	
 		}catch(e){
 			console.log('e.error:', e.error)
 			set({error: e.error})
@@ -45,7 +65,10 @@ const productStore =create((set,state)=>({
 			console.log('성공한 데이터:', resp.data.data)
 			uiStore.getState().showToastMessage('상품가입을 완료했습니다.', 'success');
 
-			set((state)=>({productList: [...state.productList, resp.data.data]}))
+			set((state)=>({
+				productList: [...state.productList, resp.data.data],
+				newProductList:[...state.newProductList, resp.data.data]
+			}))
 			navigate('/admin/product')
 			//이렇게 productList를 업데이트하면, 새로만든 물폼이 화면에 반영된다.
 

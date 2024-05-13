@@ -13,24 +13,28 @@ import userStore from '../store/userStore'
 import productStore from '../store/productStore'
 import cartStore from '../store/cartStore'
 import {useSearchParams} from 'react-router-dom'
+import PriceDropdown from "./PriceDropdown";
+import CategoryDropdown from "./CategoryDropdown";
+import SizeDropdown from "./SizeDropdown";
 
 const Navbar = ({ user }) => {
   let [width, setWidth] = useState(0);
   let navigate = useNavigate();
   const {getProductList} =productStore()
-  const {cartCount} = cartStore()
+  const {cartCount, getCart} = cartStore()
  
 	const {logout} = userStore()
   const [query, setQuery] = useSearchParams()
   const [searchQuery, setSearchQuery] =useState({
-    // page: query.get('page') || 1,
+    page: query.get('page') || '',
+    //productAll 페이지는 페이지네이션 없이 모두 보이게
     name: query.get('name') || '',
   })
   const [keyword, setKeyword] = useState('')
 
 
-  // const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
-  let isMobile = false
+  const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
+  // let isMobile = false
   const [showSearchBox, setShowSearchBox] = useState(false);
   const menuList = [
     "여성",
@@ -64,7 +68,7 @@ const Navbar = ({ user }) => {
   useEffect(()=>{
     getProductList(searchQuery)
     if(user){
-      // getCartList(user._id)
+      getCart()
     }
 
     if(searchQuery.name === ''){
@@ -73,14 +77,14 @@ const Navbar = ({ user }) => {
     
     const searchParamsString = new URLSearchParams(searchQuery).toString();
     navigate("?" + searchParamsString )
-  },[searchQuery])
+  },[searchQuery, cartCount])
   
   return (
     <div>
       {showSearchBox && (
         <div className="display-space-between mobile-search-box w-100">
           <div className="search display-space-between w-100">
-            <div>
+            <div style={{zIndex:'2'}}>
               <FontAwesomeIcon className="search-icon" icon={faSearch} />
               <input
                 type="text"
@@ -120,6 +124,15 @@ const Navbar = ({ user }) => {
 
         <div>
           <div className="display-flex">
+            <div style={{marginRight: '20px'}}>
+              <CategoryDropdown />
+            </div>
+            <div style={{marginRight: '20px'}}>
+              <SizeDropdown />
+            </div>
+            <div style={{marginRight: '20px'}}>
+              <PriceDropdown />
+            </div>
             {user ? (
               <div onClick={getLogout} className="nav-icon">
                 <FontAwesomeIcon icon={faUser} />
@@ -157,7 +170,7 @@ const Navbar = ({ user }) => {
         </div>
       </div>
 
-      <div className="nav-logo">
+      <div className="nav-logo" onClick={()=>getProductList()}>
         <Link to="/">
           <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
         </Link>

@@ -8,6 +8,7 @@ const SearchBox = ({ query, searchQuery, setSearchQuery, placeholder, field }) =
   const [keyword, setKeyword]=useState('')
 
   const onCheckEnter = (event) => {
+    console.log('서치시작')
     if (event.key === "Enter") {
        query.set('page', searchQuery.page)
       if(searchQuery.name ===''){
@@ -17,6 +18,7 @@ const SearchBox = ({ query, searchQuery, setSearchQuery, placeholder, field }) =
       }
 
       setSearchQuery({ ...searchQuery, page: 1, [field]: event.target.value });
+      setKeyword('')
     }
   };
   return (
