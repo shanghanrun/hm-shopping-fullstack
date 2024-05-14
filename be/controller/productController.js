@@ -1,4 +1,6 @@
 const Product = require('../model/Product')
+const ExcelJS = require('exceljs');
+
 
 const PAGE_SIZE =5
 const productController={}
@@ -15,6 +17,58 @@ productController.createProduct = async(req, res)=>{
 		return res.status(400).json({status:'fail', error:e.message})
 	}
 }
+productController.batchCreateProducts = async(req, res) => {
+	console.log('batch시작')
+    try {
+		function convertToValidJSON(input) {   // "쌍따옴표 넣어주기"
+			const corrected = input.replace(/(\w+):/g, '"$1":').replace(/'/g, '"');
+			return corrected;
+		}
+
+        const file = req.file;
+		console.log('file :', file)
+        if (!file) {
+            return res.status(400).json({ status: 'fail', error: '파일이 제공되지 않았습니다.' });
+        }
+
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.readFile(file.path); // file.buffer를 안사용
+
+        const worksheet = workbook.getWorksheet(1);
+        const createdProducts = [];
+
+        worksheet.eachRow({ includeEmpty: false }, async (row, rowNumber) => {
+            if (rowNumber > 1) { // 첫 번째 행은 헤더로 가정
+                const sku = row.getCell(1).value;
+                const name = row.getCell(2).value;
+                const image = row.getCell(3).value;
+				const description = row.getCell(4).value;
+				const price = parseInt(row.getCell(5).value); 
+				const status = row.getCell(6).value;
+                const category = row.getCell(7).value.split(',').map(item => item.trim())
+                const stockValue = row.getCell(8).value;
+                const isDeleted = row.getCell(9).value === 'TRUE';
+
+				let stock;
+				try {
+					const validJSON = convertToValidJSON(stockValue);
+					stock = JSON.parse(validJSON);
+				} catch (e) {
+					console.error(`Stock JSON parsing error at row ${rowNumber}: ${stockValue}`);
+					return; // 이 행을 건너뛰거나 에러 처리
+				}
+
+                const newProduct = new Product({ sku, name, image, category, description, stock, price, status, isDeleted });
+                await newProduct.save();
+                createdProducts.push(newProduct);
+            }
+        });
+
+        return res.status(200).json({ status: 'ok', data: createdProducts });
+    } catch (e) {
+        return res.status(500).json({ status: 'fail', error: e.message });
+    }
+};
 
 
 productController.getProductList=async(req, res)=>{

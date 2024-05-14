@@ -8,11 +8,13 @@ import ReactPaginate from "react-paginate";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import ProductTable from "../component/ProductTable";
 
+
 const AdminProduct = () => {
-  const {productList, getProductList, totalPage, setSelectedProduct, deleteProduct, selectedProduct} = productStore()
+  const {productList, getProductList, totalPage, setSelectedProduct, deleteProduct, selectedProduct, batchCreateProducts} = productStore()
   const {showPopup} = uiStore()
   const navigate = useNavigate();
   const [showDialog, setShowDialog] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const [query, setQuery] = useSearchParams();  
   const [searchQuery, setSearchQuery] = useState({
@@ -80,11 +82,30 @@ const AdminProduct = () => {
     //searchQuery가 바뀌면 useEffect실행된다.
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      console.error("파일을 선택해주세요.");
+      return;
+    }
+    console.log('selectedFile :', selectedFile)
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    for (let [key, value] of formData.entries()) {
+    console.log('formData: ', key, value);
+}
+    batchCreateProducts(formData, navigate)
+  };
+
   return (
     <div className="locate-center">
       <Container>
         <div className="mt-2" 
-          style={{display:'flex', gap:'200px'}}
+          style={{display:'flex', gap:'100px'}}
         >
           <SearchBox
             query={query}
@@ -94,6 +115,8 @@ const AdminProduct = () => {
             field="name"
           />
           <Button variant="success" onClick={showPopup}>show popup</Button>
+           <input type="file" onChange={handleFileChange} accept=".xlsx" />
+          <Button variant="danger" onClick={handleUpload}>Add Items(batch)</Button>
         </div>
         <Button className="mt-2 mb-2" onClick={handleClickNewItem}>
           Add New Item +
