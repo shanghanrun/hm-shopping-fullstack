@@ -271,6 +271,42 @@ orderController.getOrderList2=async(req, res)=>{
 		res.status(400).json({status:'fail', error:e.message})
 	}
 }
+orderController.getAllUserOrderList=async(req, res)=>{
+	try{
+		const {page, orderNum} = req.query
+		const userId =  req.userId
+		console.log('다음 orderNum 검색: ', orderNum)
+
+		let cond ={}  // condition 객체
+		// if (userId.level !== 'admin'){
+		// 	cond = { userId: userId };
+		// }
+		if (orderNum) {
+			cond.orderNum = { $regex: orderNum, $options: 'i' };
+		}
+
+		let query = Order2.find(cond)
+		let response = {status:'success'}
+
+		if(page){
+			query.skip((page-1)*PAGE_SIZE).limit(PAGE_SIZE)
+			const totalItemNum = await Order2.find(cond).countDocuments()
+			const totalPages = Math.ceil(totalItemNum / PAGE_SIZE)
+			response.totalPageNum = totalPages
+		}
+
+		const orderList = await query.exec()
+		const totalCount = await Order2.find().countDocuments()
+		console.log('totalCount :', totalCount)
+		response.data = orderList
+		response.totalCount = totalCount
+		console.log('찾은 orderList', orderList)
+
+		res.status(200).json(response)
+	}catch(e){
+		res.status(400).json({status:'fail', error:e.message})
+	}
+}
 
 orderController.updateOrder2 = async (req, res) => {
     try {

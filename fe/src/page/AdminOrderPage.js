@@ -12,7 +12,7 @@ import uiStore from '../store/uiStore'
 const AdminOrderPage = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useSearchParams();
-  const { orderList, getOrderList2, totalPageNum,setSelectedOrder,selectedOrder } = orderStore()
+  const { orderList, getOrderList2, totalPageNum,setSelectedOrder,selectedOrder, getAllUserOrderList, allUserOrderList, totalCount } = orderStore()
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
     orderNum: query.get("orderNum") || "",
@@ -30,7 +30,7 @@ const AdminOrderPage = () => {
   ];
 
   useEffect(() => {
-    getOrderList2(searchQuery)
+    getAllUserOrderList(searchQuery)
   }, [query, selectedOrder]);
 
   useEffect(() => {
@@ -70,10 +70,10 @@ const AdminOrderPage = () => {
             field="orderNum"
           />
         </div>
-
+        <h5>Total Orders: {totalCount} 품목</h5>
         <OrderTable
           header={tableHeader}
-          data={orderList}
+          data={allUserOrderList}
           openEditForm={openEditForm}
         />
         <ReactPaginate

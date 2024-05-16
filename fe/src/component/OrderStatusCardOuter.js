@@ -39,7 +39,8 @@ const OrderStatusCardOuter = ({order}) => {
           <div className="text-12">{convertUTCtoSeoulDate(order.updatedAt)}</div>
 
           <div>{name} 외 {order.items.length-1}개</div>
-          <div>₩ {currencyFormat(order.totalPrice)}</div>
+          <div style={{fontWeight:'bold', color:'blue'}}
+          >₩ {currencyFormat(order.totalPrice)}</div>
           <div style={{marginTop:'10px'}}>
             <button onClick={() => setShowDetails(!showDetails)}>
               {showDetails ? "간단히 보기": "주문상품 모두 보기" }
@@ -53,7 +54,7 @@ const OrderStatusCardOuter = ({order}) => {
         </Col>
         <Col md={2} className="vertical-middle">
           <div className="text-align-center text-12">주문상태</div>
-          <Badge bg="warning">{order.status}</Badge>
+          <Badge bg={badgeBg[order.status]}>{order.status}</Badge>
         </Col>
       </Row>
     </div>

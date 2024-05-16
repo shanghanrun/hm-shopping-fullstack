@@ -7,10 +7,11 @@ import NewItemDialog from "../component/NewItemDialog";
 import ReactPaginate from "react-paginate";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import ProductTable from "../component/ProductTable";
-
+import orderStore from '../store/orderStore'
 
 const AdminProduct = () => {
-  const {productList, getProductList, totalPage, setSelectedProduct, deleteProduct, selectedProduct, batchCreateProducts} = productStore()
+  const {productList, getProductList, totalPage, setSelectedProduct, deleteProduct, totalProductCount, selectedProduct, batchCreateProducts} = productStore()
+  const {getAllUserOrderList} = orderStore()
   const {showPopup} = uiStore()
   const navigate = useNavigate();
   const [showDialog, setShowDialog] = useState(false);
@@ -33,6 +34,10 @@ const AdminProduct = () => {
     "Status",
     "",
   ];
+
+  useEffect(()=>{
+    getAllUserOrderList() //order 페이지를 위해 미리 데이터를 로딩해 둔다.
+  },[])
 
   //상품리스트 가져오기 (url쿼리 맞춰서)
   useEffect(()=>{
@@ -121,7 +126,7 @@ const AdminProduct = () => {
         <Button className="mt-2 mb-2" onClick={handleClickNewItem}>
           Add New Item +
         </Button>
-
+        <h5>Total Products: {totalProductCount} 품목</h5>
         <ProductTable
           header={tableHeader}
           data={productList}

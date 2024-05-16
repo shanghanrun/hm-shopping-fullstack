@@ -11,6 +11,8 @@ const orderStore =create((set, state)=>({
 	selectedOrder:{},
 	orderList:[],
 	totalPageNum:1,
+	allUserOrderList:[],
+	totalCount:1,
 	itemsList:[],
 	nameList:[],
 	imageList:[],
@@ -71,30 +73,30 @@ const orderStore =create((set, state)=>({
 			uiStore.getState().showToastMessage(e.error, 'error'); 
 		}
 	},
-	getOrderList:async(searchQuery)=>{
-		if(searchQuery.orderNum ===""){
-			delete searchQuery.orderNum
-		}
-		try{
-			const resp = await api.get('/order')
-			if(resp.status !==200) throw new Error(resp.error)
-			console.log('order목록:', resp.data.data)
-			console.log('page 정보:', resp.data.totalPageNum)
-			console.log('itemsList :', resp.data.itemsList)
-			console.log('nameList :', resp.data.nameList)
-			console.log('imageList :', resp.data.imageList)
-			set({
-				orderList: resp.data.data,
-				totalPageNum: resp.data.totalPageNum,
-				itemsList: resp.data.itemsList,
-				nameList: resp.data.nameList,
-				imageList: resp.data.imageList
-			})	
-		}catch(e){
-			console.log('e.error:', e.error)
-			set({error: e.error})
-		}
-	},
+	// getOrderList:async(searchQuery)=>{
+	// 	if(searchQuery.orderNum ===""){
+	// 		delete searchQuery.orderNum
+	// 	}
+	// 	try{
+	// 		const resp = await api.get('/order')
+	// 		if(resp.status !==200) throw new Error(resp.error)
+	// 		console.log('order목록:', resp.data.data)
+	// 		console.log('page 정보:', resp.data.totalPageNum)
+	// 		console.log('itemsList :', resp.data.itemsList)
+	// 		console.log('nameList :', resp.data.nameList)
+	// 		console.log('imageList :', resp.data.imageList)
+	// 		set({
+	// 			orderList: resp.data.data,
+	// 			totalPageNum: resp.data.totalPageNum,
+	// 			itemsList: resp.data.itemsList,
+	// 			nameList: resp.data.nameList,
+	// 			imageList: resp.data.imageList
+	// 		})	
+	// 	}catch(e){
+	// 		console.log('e.error:', e.error)
+	// 		set({error: e.error})
+	// 	}
+	// },
 	getOrderList2:async(searchQuery)=>{
 		// if(searchQuery.orderNum ===""){
 		// 	delete searchQuery.orderNum
@@ -108,6 +110,23 @@ const orderStore =create((set, state)=>({
 			set({
 				orderList: resp.data.orderList,
 				totalPageNum: resp.data.totalPageNum
+			})	
+		}catch(e){
+			console.log('e.error:', e.error)
+			set({error: e.error})
+		}
+	},
+	getAllUserOrderList:async(searchQuery)=>{
+		try{
+			const resp = await api.get('/order/all',{params:searchQuery})
+			if(resp.status !==200) throw new Error(resp.error)
+			console.log('order목록:', resp.data.data)
+			console.log('page 정보:', resp.data.totalPageNum)
+			console.log('getAlluserOrerList 객체:', resp)
+			set({
+				allUserOrderList: resp.data.data,
+				totalPageNum: resp.data.totalPageNum,
+				totalCount: resp.data.totalCount
 			})	
 		}catch(e){
 			console.log('e.error:', e.error)

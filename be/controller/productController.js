@@ -89,7 +89,9 @@ productController.getProductList=async(req, res)=>{
 		}
 
 		const productList = await query.exec() 
-		response.data = productList
+		const totalCount = await Product.find().countDocuments()
+		response.data = productList,  //한 페이지에 보여주는 productList
+		response.totalProductCount = totalCount    //한 페이지가 아닌, 모든 페이지에 걸친 products 갯수
 		res.status(200).json(response)   
 		// response객체로 들어가면 data: productList, totalPageNum:totalPages 가 되고
 		// 프론트앤드에서는 resp.data.data, resp.data.totalPageNum 으로 받는다. 

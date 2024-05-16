@@ -22,6 +22,7 @@ const OrderStatusCard = ({order, item}) => {
           
           <div>{item.name}</div>
           <div>{currencyFormat(item.price)} * {item.qty} = ₩ {currencyFormat(item.price *item.qty)}</div>
+          <div>사이즈 : {item.size}</div>
         </Col>
         {/* <Col md={2} className="vertical-middle">
           <div className="text-align-center text-12">주문상태</div>

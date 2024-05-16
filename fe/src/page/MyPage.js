@@ -6,9 +6,11 @@ import OrderStatusCard from "../component/OrderStatusCard";
 import OrderStatusCardOuter from "../component/OrderStatusCardOuter";
 import "../style/orderStatus.style.css";
 import orderStore from '../store/orderStore'
+import userStore from '../store/userStore'
 
 const MyPage = () => {
-  const {orderList, itemsInfo, getOrderList, getOrderList2} = orderStore()
+  const {user} = userStore()
+  const {orderList, getOrderList, getOrderList2} = orderStore()
 
   // 오더리스트가 없다면? 주문한 상품이 없습니다 메세지 보여주기
   useEffect(()=>{
@@ -27,6 +29,8 @@ const MyPage = () => {
   }
   return (
     <Container className="status-card-container">
+      <h3 style={{marginBottom:'20px', padding:'20px', background:'pink', borderRadius:'10px'}}
+      >{user.name} : {user.email}   /  {orderList?.length} order(s)</h3>
       {
         orderList.map((order, i)=>(
           <div key={i}>

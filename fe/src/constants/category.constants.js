@@ -5,6 +5,7 @@ export const category =[
 	'skirt',
 	'shorts',
 	"hat",
+	'shirt',
 	'셔츠',
 	'탑',
 	'드레스',

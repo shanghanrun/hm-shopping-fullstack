@@ -59,6 +59,7 @@ const Navbar = ({ user }) => {
       }
       setSearchQuery({...searchQuery, name: event.target.value})
     }
+    setKeyword('')
   };
   const getLogout = () => {
     navigate('/')
