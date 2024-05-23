@@ -21,7 +21,7 @@ const Login = () => {
     loginWithGoogle(googleData.credential)
   };
 
-	// if(user){
+	// if(user){  // 이부분은 useEffect에 넣었다.
 	// 	navigate('/')
 	// }
 
@@ -30,7 +30,7 @@ const Login = () => {
     if (user) {
       navigate("/");
     }
-  }, [user, navigate]);
+  }, [user]);
 
 
   return (
